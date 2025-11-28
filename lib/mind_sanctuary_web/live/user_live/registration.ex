@@ -73,17 +73,11 @@ defmodule MindSanctuaryWeb.UserLive.Registration do
   def handle_event("save", %{"user" => user_params}, socket) do
     case Accounts.register_user(user_params) do
       {:ok, user} ->
-        {:ok, _} =
-          Accounts.deliver_login_instructions(
-            user,
-            &url(~p"/users/log-in/#{&1}")
-          )
-
         {:noreply,
          socket
          |> put_flash(
            :info,
-           "An email was sent to #{user.email}, please access it to confirm your account."
+           "Your account has been created! Check your email for your login details including your auto-generated password."
          )
          |> push_navigate(to: ~p"/users/log-in")}
 
