@@ -146,18 +146,23 @@ defmodule MindSanctuary.Posts do
   def create_post_with_attachments(attrs, uploads \\ []) do
     Repo.transaction(fn ->
       with {:ok, post} <- create_post(attrs) do
-        attachments =
-          uploads
-          |> Enum.map(fn upload ->
-            save_attachment(upload, post.id)
-          end)
-          |> Enum.filter(fn result ->
-            case result do
-              {:ok, _} -> true
-              {:error, _} -> false
-            end
-          end)
-          |> Enum.map(fn {:ok, attachment} -> attachment end)
+        # Only process attachments if there are any
+        _attachments =
+          case uploads do
+            [] -> []
+            _ ->
+              uploads
+              |> Enum.map(fn upload ->
+                save_attachment(upload, post.id)
+              end)
+              |> Enum.filter(fn result ->
+                case result do
+                  {:ok, _} -> true
+                  {:error, _} -> false
+                end
+              end)
+              |> Enum.map(fn {:ok, attachment} -> attachment end)
+          end
 
         # Reload post with attachments
         post = get_post!(post.id)
