@@ -47,6 +47,10 @@ defmodule MindSanctuaryWeb.Router do
       live "/resources/:id", ResourcesLive.Index, :show
       live "/chat", ChatLive.Index, :index
       live "/chat/:id", ChatLive.Index, :private
+      live "/posts", PostsLive.Index, :index
+      live "/posts/evidence", PostsLive.EvidenceComponent, :evidence
+      live "/posts/:id", PostsLive.ShowComponent, :show
+      live "/posts/:id/new", PostsLive.FormComponent, :new
 
       live "/users/settings", UserLive.Settings, :edit
       live "/users/settings/confirm-email/:token", UserLive.Settings, :confirm_email

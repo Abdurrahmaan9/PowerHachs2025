@@ -31,7 +31,7 @@ defmodule MindSanctuary.Resources.Resource do
     ])
     |> validate_required([:type, :category, :url, :title])
     |> validate_inclusion(:type, ["article", "audio", "video", "document"])
-    |> validate_inclusion(:access_level, ["public", "student", "volunteer"])
+    |> validate_inclusion(:access_level, ["public", "user", "volunteer"])
     |> validate_inclusion(:category, ["mental health", "academic", "career", "wellness", "safety"])
     |> validate_length(:title, min: 3, max: 255)
   end
