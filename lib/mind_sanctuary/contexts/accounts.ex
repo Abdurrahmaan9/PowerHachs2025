@@ -6,7 +6,7 @@ defmodule MindSanctuary.Accounts do
   import Ecto.Query, warn: false
   alias MindSanctuary.Repo
 
-  alias MindSanctuary.Accounts.{User, UserToken, UserNotifier}
+  alias MindSanctuary.Accounts.{User, UserToken, UserNotifier, Email}
 
   ## Database getters
 
@@ -91,8 +91,65 @@ defmodule MindSanctuary.Accounts do
 
   """
   def register_user(attrs) do
-    %User{}
-    |> User.email_changeset(attrs)
+    # Generate a random password for the user
+    password = :crypto.strong_rand_bytes(12) |> Base.encode64() |> binary_part(0, 12)
+
+    # Add the generated password to the attrs with string key
+    attrs_with_password = Map.put(attrs, "password", password)
+
+    # Create the user with the password
+    case %User{}
+         |> User.email_changeset(attrs_with_password)
+         |> User.password_changeset(attrs_with_password)
+         |> Repo.insert() do
+      {:ok, user} ->
+        # Send email with user details
+        send_user_details_email(user, password)
+        {:ok, user}
+
+      {:error, changeset} ->
+        {:error, changeset}
+    end
+  end
+
+  defp send_user_details_email(user, password) do
+    # Create email content
+    subject = "Your Account Details"
+    body = """
+    Hello #{user.username},
+
+    Your account has been created successfully. Here are your login details:
+
+    Username: #{user.username}
+    Email: #{user.email}
+    Password: #{password}
+
+    Please keep this information secure and change your password after first login.
+
+    Best regards,
+    MindSanctuary Team
+    """
+
+    # Log email to terminal
+    IO.puts("\n=== EMAIL SENT ===")
+    IO.puts("To: #{user.email}")
+    IO.puts("Subject: #{subject}")
+    IO.puts("Body:")
+    IO.puts(body)
+    IO.puts("==================\n")
+
+    # Save email to database
+    email_attrs = %{
+      to: user.email,
+      from: "noreply@mind_sanctuary.com",
+      subject: subject,
+      body: body,
+      status: "sent",
+      sent_at: DateTime.utc_now()
+    }
+
+    %Email{}
+    |> Email.changeset(email_attrs)
     |> Repo.insert()
   end
 

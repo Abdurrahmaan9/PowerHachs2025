@@ -11,50 +11,80 @@
 # and so on) as they will fail if something goes wrong.
 now = DateTime.utc_now(:second)
 ######### ADMIN SEED ACCOUNT #################
+admin_password = :crypto.strong_rand_bytes(12) |> Base.encode64() |> binary_part(0, 12)
+admin_username = UniqueNamesGenerator.generate([:adjectives, :animals])
+admin_email = "admin@myspace.com"
+
+IO.puts("=== ADMIN ACCOUNT ===")
+IO.puts("Username: #{admin_username}")
+IO.puts("Email: #{admin_email}")
+IO.puts("Password: #{admin_password}")
+IO.puts("=======================")
+
 {:ok, admin} =
   %{
-    email: "admin@myspace.com",
-    username: UniqueNamesGenerator.generate([:adjectives, :animals]),
+    email: admin_email,
+    username: admin_username,
     role: "admin"
   }
   |> MindSanctuary.Accounts.register_user()
 
 admin
 |> MindSanctuary.Accounts.update_user_password(%{
-  password: "admin@myspace.com",
-  password_confirmation: "admin@myspace.com",
+  password: admin_password,
+  password_confirmation: admin_password,
   confirmed_at: now
 })
 
 ######### USER SEED ACCOUNT #################
+user_password = :crypto.strong_rand_bytes(12) |> Base.encode64() |> binary_part(0, 12)
+user_username = UniqueNamesGenerator.generate([:adjectives, :animals])
+user_email = "user@myspace.com"
+
+IO.puts("\n=== USER ACCOUNT ===")
+IO.puts("Username: #{user_username}")
+IO.puts("Email: #{user_email}")
+IO.puts("Password: #{user_password}")
+IO.puts("===================")
+
 {:ok, user} =
   %{
-    email: "user@myspace.com",
-    username: UniqueNamesGenerator.generate([:adjectives, :animals]),
+    email: user_email,
+    username: user_username,
     role: "user"
   }
   |> MindSanctuary.Accounts.register_user()
 
 user
 |> MindSanctuary.Accounts.update_user_password(%{
-  password: "user@myspace.com",
-  password_confirmation: "user@myspace.com",
+  password: user_password,
+  password_confirmation: user_password,
   confirmed_at: now
 })
 
 ######### VOLUNTEER SEED ACCOUNT #################
+volunteer_password = :crypto.strong_rand_bytes(12) |> Base.encode64() |> binary_part(0, 12)
+volunteer_username = UniqueNamesGenerator.generate([:adjectives, :animals])
+volunteer_email = "volunteer@myspace.com"
+
+IO.puts("\n=== VOLUNTEER ACCOUNT ===")
+IO.puts("Username: #{volunteer_username}")
+IO.puts("Email: #{volunteer_email}")
+IO.puts("Password: #{volunteer_password}")
+IO.puts("========================")
+
 {:ok, volunteer} =
   %{
-    email: "volunteer@myspace.com",
-    username: UniqueNamesGenerator.generate([:adjectives, :animals]),
+    email: volunteer_email,
+    username: volunteer_username,
     role: "volunteer"
   }
   |> MindSanctuary.Accounts.register_user()
 
 volunteer
 |> MindSanctuary.Accounts.update_user_password(%{
-  password: "volunteer@myspace.com",
-  password_confirmation: "volunteer@myspace.com",
+  password: volunteer_password,
+  password_confirmation: volunteer_password,
   confirmed_at: now
 })
 
