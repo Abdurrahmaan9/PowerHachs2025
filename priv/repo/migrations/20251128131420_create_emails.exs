@@ -6,8 +6,8 @@ defmodule MindSanctuary.Repo.Migrations.CreateEmails do
       add :to, :string, null: false
       add :from, :string, null: false
       add :subject, :string, null: false
-      add :body, :text, null: false
-      add :html_body, :text
+      add :body, :string, null: false
+      add :html_body, :string
       add :status, :string, default: "sent", null: false
       add :sent_at, :utc_datetime
 
