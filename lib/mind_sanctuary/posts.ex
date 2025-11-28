@@ -214,9 +214,9 @@ defmodule MindSanctuary.Posts do
 
   def upload_attachments(socket, route) do
     IO.inspect("upload_attachments called")
-    IO.inspect(socket.assigns.uploads.attachments.entries, label: "Entries in upload_attachments")
+    IO.inspect(socket.assigns.uploads.file_url.entries, label: "Entries in upload_attachments")
 
-    Phoenix.LiveView.consume_uploaded_entries(socket, :attachments, fn %{path: tmp_path}, entry ->
+    Phoenix.LiveView.consume_uploaded_entries(socket, :file_url, fn %{path: tmp_path}, entry ->
       IO.inspect("Processing upload entry", label: "Upload processing")
       filename = entry.client_name
       ext = Path.extname(filename)
