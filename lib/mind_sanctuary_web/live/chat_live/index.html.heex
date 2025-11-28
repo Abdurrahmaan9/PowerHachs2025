@@ -1,5 +1,5 @@
-<div class="max-w-7xl max-h-screen mx-auto px-4 sm:px-6 lg:px-8 py-8">
-  <div class="mb-8">
+<div class="max-w-7xl h-screen mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col">
+  <div class="mb-8 flex-shrink-0">
     <h1 class="text-3xl font-bold text-gray-900">
       <%= if @live_action == :index do %>
         Public Chat
@@ -18,7 +18,7 @@
 
 <!-- Main Chat Container -->
   <div class="flex-1 flex overflow-hidden">
-    <div class="flex-1 flex flex-col min-h-[790px]">
+    <div class="flex-1 flex flex-col">
       <div class="flex-1 flex overflow-hidden">
         <!-- Chat Messages Area -->
         <div class="flex-1 flex flex-col">
@@ -97,36 +97,36 @@
             <% end %>
         </div>
 
-<!-- Message Input -->
-            <div class="border-t border-gray-200 bg-white px-4 sm:px-6 lg:px-8 py-4"
-            id="chat-container"
-            phx-hook="ChatChannel"
-            >
-              <.form for={%{}} phx-submit="send_message" class="flex items-end space-x-3">
-                <div class="flex-1">
-                  <.input
-                    type="text"
-                    name="message[body]"
-                    value={@message_body}
-                    autocomplete="off"
-                    placeholder="Type your message..."
-                    rows="1"
-                  />
-                </div>
-                <.button type="submit" class="flex-shrink-0">
-                  <svg class="w-5 h-5 mb-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
-                    >
-                    </path>
-                  </svg>
-                </.button>
-              </.form>
+<!-- Message Input - Fixed at Bottom -->
+        <div class="flex-shrink-0 border-t border-gray-200 bg-white px-4 sm:px-6 lg:px-8 py-4"
+          id="chat-container"
+          phx-hook="ChatChannel"
+        >
+          <.form for={%{}} phx-submit="send_message" class="flex items-end space-x-3">
+            <div class="flex-1">
+              <.input
+                type="text"
+                name="message[body]"
+                value={@message_body}
+                autocomplete="off"
+                placeholder="Type your message..."
+                rows="1"
+              />
             </div>
-          </div>
+            <.button type="submit" class="flex-shrink-0">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+                >
+                </path>
+              </svg>
+            </.button>
+          </.form>
+        </div>
+      </div>
 
 <!-- Sidebar -->
         <div class={"#{if @show_mobile_sidebar, do: "fixed inset-0 z-40 lg:relative lg:z-0", else: "ml-8 hidden"} lg:block lg:w-80 border-l border-gray-200"}>
