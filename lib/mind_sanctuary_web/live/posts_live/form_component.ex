@@ -40,7 +40,7 @@ defmodule MindSanctuaryWeb.PostsLive.FormComponent do
 
     # Upload files first, then create post with attachment URLs (same pattern as resources)
     IO.inspect("About to upload attachments...")
-    IO.inspect(socket.assigns.uploads.attachments.entries, label: "Upload entries before consumption")
+    IO.inspect(socket.assigns.uploads.file_url.entries, label: "Upload entries before consumption")
 
     attachment_urls =
       case MindSanctuary.Posts.upload_attachments(socket, "/uploads") do
@@ -199,7 +199,7 @@ defmodule MindSanctuaryWeb.PostsLive.FormComponent do
                   Attachments
                 </label>
                 <div
-                  phx-drop-target={@uploads.attachments.ref}
+                  phx-drop-target={@uploads.file_url.ref}
                   class="border-2 border-gray-300 border-dashed rounded-lg p-6 text-center hover:border-gray-400 transition-colors"
                 >
                   <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
@@ -214,15 +214,11 @@ defmodule MindSanctuaryWeb.PostsLive.FormComponent do
                         PNG, JPG, GIF, PDF up to 10MB each
                       </span>
                     </label>
-                    <.live_file_input
-                      upload={@uploads.attachments}
-                      class="sr-only"
-                      id="file-upload"
-                    />
+                    <.live_file_input upload={@uploads.file_url} />
                   </div>
                 </div>
 
-                <%= for entry <- @uploads.attachments.entries do %>
+                <%= for entry <- @uploads.file_url.entries do %>
                   <div class="mt-4">
                     <div class="flex items-center justify-between text-sm text-gray-600 bg-gray-50 px-3 py-2 rounded">
                       <span><%= entry.client_name %></span>
@@ -250,7 +246,7 @@ defmodule MindSanctuaryWeb.PostsLive.FormComponent do
                   </div>
                 <% end %>
 
-                <%= for err <- @uploads.attachments.errors do %>
+                <%= for err <- @uploads.file_url.errors do %>
                   <div class="mt-2 text-sm text-red-600">
                     <%= err.message %>
                   </div>
