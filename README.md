@@ -1,14 +1,14 @@
 # MindSanctuary - System overview (technical summary)
 
-MindSanctuary is a non-clinical, university-centered wellbeing SaaS built with Phoenix LiveView for reactive UI and Phoenix Channels for anonymous peer chat. Core subsystems:
+MindSanctuary is a non-clinical, community centered wellbeing SaaS built with Phoenix LiveView for reactive UI and Phoenix Channels for anonymous peer chat. Core subsystems:
 
-* Auth & Identity (student and volunteer roles; anonymous chat identity).
+* Auth & Identity (normal users and volunteer roles; anonymous chat identity).
 
 * Mood Tracker (daily check-ins, simple analytics).
 
-* Resource Hub (audio files, articles, contact info — university-tagged).
+* Resource Hub (audio files, articles, contact info).
 
-* Anonymous Peer Support (real-time chat pairing students with volunteers).
+* Anonymous Peer Support (real-time chat pairing normal users with volunteers).
 
 * Events / Workshops (listing, RSVP, calendar export).
 
@@ -20,7 +20,7 @@ MindSanctuary is a non-clinical, university-centered wellbeing SaaS built with P
 
 MVP features (build first):
 
-1. Auth (university email sign-up + role selection).
+1. Auth (email sign-up + role selection).
 
 2. Mood Tracker with simple timeline view.
 
@@ -40,8 +40,6 @@ Stretch (add later):
   * Sentiment analytics / charts.
 
   * Rich media uploads by volunteers.
-
-  * SSO with university (SAML/OAuth).
 
 
 # Endpoints & LiveViews (minimal list)
