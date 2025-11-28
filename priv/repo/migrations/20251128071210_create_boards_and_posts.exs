@@ -20,6 +20,8 @@ defmodule MindSanctuary.Repo.Migrations.CreateBoardsAndPosts do
       add :support_count, :integer, default: 0
       add :board_id, references(:boards, on_delete: :delete_all), null: false
       add :user_id, references(:users, on_delete: :delete_all), null: false
+      add :visibility, :string, default: "all", null: false
+      add :is_evidence, :boolean, default: false, null: false
 
       timestamps()
     end
