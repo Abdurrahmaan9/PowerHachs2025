@@ -6,8 +6,8 @@ defmodule MindSanctuary.Accounts.Email do
     field :to, :string
     field :from, :string
     field :subject, :string
-    field :body, :text
-    field :html_body, :text
+    field :body, :string
+    field :html_body, :string
     field :status, :string, default: "sent"
     field :sent_at, :utc_datetime
 
