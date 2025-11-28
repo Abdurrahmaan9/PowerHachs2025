@@ -12,6 +12,7 @@ defmodule MindSanctuary.Posts.Post do
 
     belongs_to :board, MindSanctuary.Posts.Board
     belongs_to :user, MindSanctuary.Accounts.User
+    has_many :attachments, MindSanctuary.Posts.Attachment
 
     timestamps()
   end

@@ -10,6 +10,7 @@ defmodule MindSanctuary.Posts do
   alias MindSanctuary.Posts.Board
   alias MindSanctuary.Posts.Post
   alias MindSanctuary.Posts.Support
+  alias MindSanctuary.Posts.Attachment
 
   @doc """
   Returns the list of boards.
@@ -73,7 +74,7 @@ defmodule MindSanctuary.Posts do
     |> where([p], p.is_evidence == false)
     |> filter_by_visibility(user_role)
     |> order_by(desc: :inserted_at)
-    |> preload([:user, :board])
+    |> preload([:user, :board, :attachments])
     |> Repo.all()
   end
 
@@ -90,7 +91,7 @@ defmodule MindSanctuary.Posts do
     Post
     |> where([p], p.is_evidence == true)
     |> order_by(desc: :inserted_at)
-    |> preload([:user, :board])
+    |> preload([:user, :board, :attachments])
     |> Repo.all()
   end
 
@@ -126,8 +127,80 @@ defmodule MindSanctuary.Posts do
   """
   def get_post!(id) do
     Post
-    |> preload([:user, :board])
+    |> preload([:user, :board, :attachments])
     |> Repo.get!(id)
+  end
+
+  @doc """
+  Creates a post with optional attachments.
+
+  ## Examples
+
+      iex> create_post_with_attachments(%{field: value}, [])
+      {:ok, %Post{}}
+
+      iex> create_post_with_attachments(%{field: value}, [%Plug.Upload{}])
+      {:ok, %Post{}}
+
+  """
+  def create_post_with_attachments(attrs, uploads \\ []) do
+    Repo.transaction(fn ->
+      with {:ok, post} <- create_post(attrs) do
+        attachments =
+          uploads
+          |> Enum.map(fn upload ->
+            save_attachment(upload, post.id)
+          end)
+          |> Enum.filter(fn result ->
+            case result do
+              {:ok, _} -> true
+              {:error, _} -> false
+            end
+          end)
+          |> Enum.map(fn {:ok, attachment} -> attachment end)
+
+        # Reload post with attachments
+        post = get_post!(post.id)
+        post
+      end
+    end)
+  end
+
+  @doc """
+  Saves a file upload as an attachment.
+
+  ## Examples
+
+      iex> save_attachment(%Plug.Upload{}, post_id)
+      {:ok, %Attachment{}}
+
+  """
+  def save_attachment(%Plug.Upload{} = upload, post_id) do
+    # Generate unique filename using timestamp
+    timestamp = System.system_time(:millisecond)
+    filename = "#{timestamp}_#{upload.filename}"
+
+    # Create uploads directory if it doesn't exist
+    upload_dir = "priv/static/uploads"
+    File.mkdir_p!(upload_dir)
+
+    # Save file to disk
+    file_path = Path.join(upload_dir, filename)
+    File.copy!(upload.path, file_path)
+
+    # Create attachment record
+    attachment_attrs = %{
+      filename: filename,
+      original_filename: upload.filename,
+      content_type: upload.content_type,
+      size: upload.path |> File.stat!() |> Map.get(:size),
+      path: file_path,
+      post_id: post_id
+    }
+
+    %Attachment{}
+    |> Attachment.changeset(attachment_attrs)
+    |> Repo.insert()
   end
 
   @doc """

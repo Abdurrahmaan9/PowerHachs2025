@@ -16,6 +16,10 @@ defmodule MindSanctuaryWeb.PostsLive.ShowComponent do
     {:ok, socket}
   end
 
+  # Helper function to format file sizes
+  defp format_file_size(bytes) when bytes < 1_048_576, do: "#{Float.round(bytes / 1024, 1)} KB"
+  defp format_file_size(bytes), do: "#{Float.round(bytes / 1_048_576, 1)} MB"
+
   @impl true
   def handle_event("support_post", %{"post-id" => post_id}, socket) do
     IO.inspect("Support post triggered for post: #{post_id}")
@@ -94,6 +98,56 @@ defmodule MindSanctuaryWeb.PostsLive.ShowComponent do
                     <%= post.content %>
                   </p>
                 </div>
+
+                <%= if post.attachments && post.attachments != [] do %>
+                  <div class="mt-6">
+                    <h4 class="text-sm font-medium text-gray-700 mb-3">Attachments</h4>
+                    <div class="space-y-2">
+                      <%= for attachment <- post.attachments do %>
+                        <div class="flex items-center justify-between bg-gray-50 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors">
+                          <div class="flex items-center space-x-3">
+                            <div class="flex-shrink-0">
+                              <%= cond do %>
+                                <% String.starts_with?(attachment.content_type, "image/") -> %>
+                                  <svg class="h-5 w-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                  </svg>
+                                <% String.contains?(attachment.content_type, "pdf") -> %>
+                                  <svg class="h-5 w-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                  </svg>
+                                <% true -> %>
+                                  <svg class="h-5 w-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                  </svg>
+                              <% end %>
+                            </div>
+                            <div>
+                              <p class="text-sm font-medium text-gray-900">
+                                <%= attachment.original_filename %>
+                              </p>
+                              <p class="text-xs text-gray-500">
+                                <%= format_file_size(attachment.size) %>
+                              </p>
+                            </div>
+                          </div>
+                          <div class="flex items-center space-x-2">
+                            <.link
+                              href={"/uploads/#{attachment.filename}"}
+                              download={attachment.original_filename}
+                              class="inline-flex items-center px-2 py-1 border border-gray-300 text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            >
+                              <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                              </svg>
+                              Download
+                            </.link>
+                          </div>
+                        </div>
+                      <% end %>
+                    </div>
+                  </div>
+                <% end %>
                 <div class="mt-6 flex justify-end">
                   <% has_supported = MindSanctuary.Posts.user_supported_post?(@current_scope.user.id, post.id) %>
                   <button
