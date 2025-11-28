@@ -146,18 +146,23 @@ defmodule MindSanctuary.Posts do
   def create_post_with_attachments(attrs, uploads \\ []) do
     Repo.transaction(fn ->
       with {:ok, post} <- create_post(attrs) do
-        attachments =
-          uploads
-          |> Enum.map(fn upload ->
-            save_attachment(upload, post.id)
-          end)
-          |> Enum.filter(fn result ->
-            case result do
-              {:ok, _} -> true
-              {:error, _} -> false
-            end
-          end)
-          |> Enum.map(fn {:ok, attachment} -> attachment end)
+        # Only process attachments if there are any
+        _attachments =
+          case uploads do
+            [] -> []
+            _ ->
+              uploads
+              |> Enum.map(fn upload ->
+                save_attachment(upload, post.id)
+              end)
+              |> Enum.filter(fn result ->
+                case result do
+                  {:ok, _} -> true
+                  {:error, _} -> false
+                end
+              end)
+              |> Enum.map(fn {:ok, attachment} -> attachment end)
+          end
 
         # Reload post with attachments
         post = get_post!(post.id)
@@ -214,9 +219,9 @@ defmodule MindSanctuary.Posts do
 
   def upload_attachments(socket, route) do
     IO.inspect("upload_attachments called")
-    IO.inspect(socket.assigns.uploads.attachments.entries, label: "Entries in upload_attachments")
+    IO.inspect(socket.assigns.uploads.file_url.entries, label: "Entries in upload_attachments")
 
-    Phoenix.LiveView.consume_uploaded_entries(socket, :attachments, fn %{path: tmp_path}, entry ->
+    Phoenix.LiveView.consume_uploaded_entries(socket, :file_url, fn %{path: tmp_path}, entry ->
       IO.inspect("Processing upload entry", label: "Upload processing")
       filename = entry.client_name
       ext = Path.extname(filename)
