@@ -59,6 +59,16 @@ defmodule MindSanctuaryWeb.Router do
     post "/users/update-password", UserSessionController, :update_password
   end
 
+  # Admin routes (only accessible by admins)
+  scope "/", MindSanctuaryWeb do
+    pipe_through [:browser, :require_authenticated_user]
+
+    live_session :require_admin,
+      on_mount: [{MindSanctuaryWeb.UserAuth, :require_authenticated}] do
+      live "/admin/seed_data", AdminLive.SeedData, :index
+    end
+  end
+
   # Other scopes may use custom stacks.
   # scope "/api", MindSanctuaryWeb do
   #   pipe_through :api
