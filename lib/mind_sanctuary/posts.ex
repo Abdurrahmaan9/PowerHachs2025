@@ -146,7 +146,7 @@ defmodule MindSanctuary.Posts do
   def create_post_with_attachments(attrs, uploads \\ []) do
     Repo.transaction(fn ->
       with {:ok, post} <- create_post(attrs) do
-        _attachments =
+        attachments =
           uploads
           |> Enum.map(fn upload ->
             save_attachment(upload, post.id)
@@ -209,6 +209,36 @@ defmodule MindSanctuary.Posts do
 
     %Attachment{}
     |> Attachment.changeset(attachment_attrs)
+    |> Repo.insert()
+  end
+
+  def upload_attachments(socket, route) do
+    IO.inspect("upload_attachments called")
+    IO.inspect(socket.assigns.uploads.attachments.entries, label: "Entries in upload_attachments")
+
+    Phoenix.LiveView.consume_uploaded_entries(socket, :attachments, fn %{path: tmp_path}, entry ->
+      IO.inspect("Processing upload entry", label: "Upload processing")
+      filename = entry.client_name
+      ext = Path.extname(filename)
+      basename = Path.rootname(filename, ext)
+      unique_id = :erlang.unique_integer([:positive, :monotonic])
+
+      upload_dir = "priv/static"
+      unique_filename = "#{basename}_#{unique_id}#{ext}"
+
+      dest_dir = Path.join(upload_dir, route)
+      File.mkdir_p!(dest_dir)
+      dest = Path.join(dest_dir, unique_filename)
+
+      File.cp!(tmp_path, dest)
+      IO.inspect("#{route}/#{unique_filename}", label: "File saved at")
+      {:ok, "#{route}/#{unique_filename}"}
+    end)
+  end
+
+  def create_attachment(attrs) do
+    %Attachment{}
+    |> Attachment.changeset(attrs)
     |> Repo.insert()
   end
 

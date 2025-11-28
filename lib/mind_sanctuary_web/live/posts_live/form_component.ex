@@ -1,6 +1,10 @@
 defmodule MindSanctuaryWeb.PostsLive.FormComponent do
   use MindSanctuaryWeb, :live_view
 
+  # Helper function to format file sizes
+  defp format_file_size(bytes) when bytes < 1_048_576, do: "#{Float.round(bytes / 1024, 1)} KB"
+  defp format_file_size(bytes), do: "#{Float.round(bytes / 1_048_576, 1)} MB"
+
   @impl true
   def mount(%{"id" => board_id}, _session, socket) do
     board = MindSanctuary.Posts.get_board!(board_id)
@@ -16,11 +20,7 @@ defmodule MindSanctuaryWeb.PostsLive.FormComponent do
         "visibility" => "all",
         "is_evidence" => false
       }))
-      |> allow_upload(:attachments,
-        accept: ~w(.jpg .jpeg .png .gif .pdf .doc .docx),
-        max_file_size: 10_000_000,
-        max_entries: 5
-      )
+     |> allow_upload(:file_url, accept: ~w(.pdf .png .jpeg .mp3 .mp4), max_entries: 1)
 
     {:ok, socket}
   end
@@ -38,35 +38,37 @@ defmodule MindSanctuaryWeb.PostsLive.FormComponent do
 
     IO.inspect(post_params, label: "Final post params")
 
-    # Consume uploaded files
-    uploaded_files =
-      consume_uploaded_entries(socket, :attachments, fn %{path: path, client_name: name, content_type: type} ->
-        # Generate unique filename
-        timestamp = System.system_time(:millisecond)
-        filename = "#{timestamp}_#{name}"
+    # Upload files first, then create post with attachment URLs (same pattern as resources)
+    IO.inspect("About to upload attachments...")
+    IO.inspect(socket.assigns.uploads.attachments.entries, label: "Upload entries before consumption")
 
-        # Create uploads directory if it doesn't exist
-        upload_dir = "priv/static/uploads"
-        File.mkdir_p!(upload_dir)
+    attachment_urls =
+      case MindSanctuary.Posts.upload_attachments(socket, "/uploads") do
+        {:error, e} ->
+          IO.inspect(e, label: "Upload error")
+          []
+        urls when is_list(urls) ->
+          IO.inspect(urls, label: "Upload URLs returned")
+          urls
+        other ->
+          IO.inspect(other, label: "Unexpected upload result")
+          []
+      end
 
-        # Save file to disk
-        file_path = Path.join(upload_dir, filename)
-        File.cp!(path, file_path)
+    IO.inspect(attachment_urls, label: "Uploaded attachment URLs")
 
-        # Return attachment data for database
-        %{
-          filename: filename,
-          original_filename: name,
-          content_type: type,
-          size: path |> File.stat!() |> Map.get(:size),
-          path: file_path
-        }
-      end)
+    case MindSanctuary.Posts.create_post(post_params) do
+      {:ok, post} ->
+        # Create attachment records for each uploaded file
+        Enum.each(attachment_urls, fn url ->
+          MindSanctuary.Posts.create_attachment(%{
+            "post_id" => post.id,
+            "filename" => Path.basename(url),
+            "path" => url,
+            "original_filename" => Path.basename(url)
+          })
+        end)
 
-    IO.inspect(uploaded_files, label: "Uploaded files")
-
-    case MindSanctuary.Posts.create_post_with_attachments(post_params, uploaded_files) do
-      {:ok, _post} ->
         {:noreply,
          socket
          |> put_flash(:info, "Post created successfully.")
@@ -212,7 +214,11 @@ defmodule MindSanctuaryWeb.PostsLive.FormComponent do
                         PNG, JPG, GIF, PDF up to 10MB each
                       </span>
                     </label>
-                    <%= Phoenix.Component.live_file_input(@uploads.attachments) %>
+                    <.live_file_input
+                      upload={@uploads.attachments}
+                      class="sr-only"
+                      id="file-upload"
+                    />
                   </div>
                 </div>
 
