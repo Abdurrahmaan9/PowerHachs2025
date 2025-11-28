@@ -1,0 +1,117 @@
+<!-- <Layouts.app flash={@flash} current_scope={@current_scope}> -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <h1 class="text-2xl font-semibold mb-6">Your Calendar</h1>
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      <div class="lg:col-span-3">
+        <!-- Calendar Card -->
+        <div class="w-full bg-white shadow rounded-lg p-6 mb-8">
+      <div class="flex items-center justify-between mb-4">
+        <button phx-click="prev_month" class="px-3 py-1 rounded hover:bg-gray-100">&larr;</button>
+        <div class="text-lg font-medium">
+          <%= Elixir.Calendar.strftime(@view_date, "%B %Y") %>
+        </div>
+        <button phx-click="next_month" class="px-3 py-1 rounded hover:bg-gray-100">&rarr;</button>
+      </div>
+
+      <div class="w-full grid grid-cols-7 text-center text-xs font-medium text-gray-500 mb-2">
+        <div>Sun</div>
+        <div>Mon</div>
+        <div>Tue</div>
+        <div>Wed</div>
+        <div>Thu</div>
+        <div>Fri</div>
+        <div>Sat</div>
+      </div>
+
+      <div class="w-full grid grid-rows-6 gap-2">
+        <%= for week <- @days do %>
+          <div class="w-full grid grid-cols-7 gap-2">
+            <%= for date <- week do %>
+              <% in_month = date.month == @view_date.month %>
+              <% today = date == Date.utc_today() %>
+              <button
+                phx-click="select_date"
+                phx-value-date={Date.to_iso8601(date)}
+                class={[
+                  "h-20 rounded border flex flex-col items-center justify-between p-2 transition",
+                  in_month && "bg-white hover:bg-gray-50",
+                  !in_month && "bg-gray-50 text-gray-400",
+                  today && "border-indigo-500"
+                ]}
+              >
+                <span class="text-sm"><%= date.day %></span>
+                <%= if Map.has_key?(@events_by_date || %{}, date) do %>
+                  <span class="h-1.5 w-1.5 rounded-full bg-indigo-500"></span>
+                <% else %>
+                  <span class="h-1.5 w-1.5 rounded-full bg-transparent"></span>
+                <% end %>
+              </button>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+        </div>
+      </div>
+
+      <div class="lg:col-span-1">
+        <!-- Upcoming List -->
+        <div class="bg-white shadow rounded-lg p-6">
+      <h2 class="text-lg font-medium mb-4">
+        Upcoming schedules
+      </h2>
+      <%= if @schedules == [] do %>
+        <p class="text-gray-500">No schedules yet.</p>
+      <% else %>
+        <div class="grid grid-cols-1 gap-4">
+          <%= for s <- @schedules do %>
+            <div class="rounded-xl border border-indigo-100 bg-gradient-to-br from-indigo-50 to-white p-4 shadow-sm hover:shadow-md hover:border-indigo-200 transition">
+              <div class="flex items-start justify-between">
+                <div class="flex items-center gap-2 min-w-0">
+                  <.icon name="hero-calendar-days" class="w-4 h-4 text-indigo-500" />
+                  <p class="font-medium text-gray-900 truncate"><%= s.title %></p>
+                </div>
+              </div>
+              <div class="mt-2 flex items-center gap-2 flex-wrap">
+                <span class="text-xs px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-700">
+                  <%= s.starts_at %><%= if s.ends_at, do: " - #{s.ends_at}" %>
+                </span>
+              </div>
+              <%= if s.description && s.description != "" do %>
+                <p class="mt-2 text-sm text-gray-700"><%= s.description %></p>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+      </div>
+    </div>
+
+    
+
+    <!-- Modal -->
+    <%= if @modal_open do %>
+      <div class="fixed inset-0 z-40 bg-black/40"></div>
+      <div class="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="w-full max-w-lg bg-white rounded-lg shadow p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-medium">Add schedule for <%= Elixir.Calendar.strftime(@selected_date, "%b %d, %Y") %></h3>
+            <button phx-click="close_modal" class="text-gray-500 hover:text-gray-700">&times;</button>
+          </div>
+          <.form for={@form} phx-submit="save" id="calendar-form-modal" class="space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <.input field={@form[:title]} label="Title" />
+              <.input field={@form[:description]} label="Description" />
+              <.input field={@form[:starts_at]} type="datetime-local" label="Starts at" />
+              <.input field={@form[:ends_at]} type="datetime-local" label="Ends at" />
+            </div>
+            <div class="flex justify-end gap-3">
+              <button type="button" phx-click="close_modal" class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">Cancel</button>
+              <button type="submit" class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Save</button>
+            </div>
+          </.form>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<!-- </Layouts.app> -->

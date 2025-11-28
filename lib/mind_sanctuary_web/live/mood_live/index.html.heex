@@ -1,0 +1,304 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900">
+      Mood Tracker
+    </h1>
+    <p class="mt-2 text-sm text-gray-600">
+      Track your mood and journal your thoughts to help manage stress
+    </p>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="lg:col-span-2">
+      <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+        <div class="px-4 py-5 sm:px-6 bg-indigo-50">
+          <h2 class="text-lg leading-6 font-medium text-gray-900">
+            How are you feeling today?
+          </h2>
+          <p class="mt-1 max-w-2xl text-sm text-gray-500">
+            Record your current mood and thoughts
+          </p>
+        </div>
+
+        <div class="border-t border-gray-200 px-4 py-5 sm:p-6">
+          <.form :let={f} for={@changeset} phx-submit="save" class="space-y-6">
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Select your mood</label>
+              <div class="mt-2 grid grid-cols-3 sm:grid-cols-7 gap-3">
+                <div>
+                  <label class="mood-option">
+                    <input
+                      type="radio"
+                      name={f[:mood].name}
+                      id="mood-happy"
+                      value="happy"
+                      class="sr-only peer"
+                      checked={f[:mood].value == "happy"}
+                    />
+                    <div class="cursor-pointer text-center p-2 rounded-lg border-2 border-transparent peer-checked:border-indigo-500 peer-checked:bg-indigo-50 hover:bg-gray-50">
+                      <div class="text-2xl mb-1">😊</div>
+                      <div class="text-xs font-medium">Happy</div>
+                    </div>
+                  </label>
+                </div>
+                <div>
+                  <label class="mood-option">
+                    <input
+                      type="radio"
+                      name={f[:mood].name}
+                      id="mood-calm"
+                      value="calm"
+                      class="sr-only peer"
+                      checked={f[:mood].value == "calm"}
+                    />
+                    <div class="cursor-pointer text-center p-2 rounded-lg border-2 border-transparent peer-checked:border-indigo-500 peer-checked:bg-indigo-50 hover:bg-gray-50">
+                      <div class="text-2xl mb-1">😌</div>
+                      <div class="text-xs font-medium">Calm</div>
+                    </div>
+                  </label>
+                </div>
+                <div>
+                  <label class="mood-option">
+                    <input
+                      type="radio"
+                      name={f[:mood].name}
+                      id="mood-neutral"
+                      value="neutral"
+                      class="sr-only peer"
+                      checked={f[:mood].value == "neutral"}
+                    />
+                    <div class="cursor-pointer text-center p-2 rounded-lg border-2 border-transparent peer-checked:border-indigo-500 peer-checked:bg-indigo-50 hover:bg-gray-50">
+                      <div class="text-2xl mb-1">😐</div>
+                      <div class="text-xs font-medium">Neutral</div>
+                    </div>
+                  </label>
+                </div>
+                <div>
+                  <label class="mood-option">
+                    <input
+                      type="radio"
+                      name={f[:mood].name}
+                      id="mood-sad"
+                      value="sad"
+                      class="sr-only peer"
+                      checked={f[:mood].value == "sad"}
+                    />
+                    <div class="cursor-pointer text-center p-2 rounded-lg border-2 border-transparent peer-checked:border-indigo-500 peer-checked:bg-indigo-50 hover:bg-gray-50">
+                      <div class="text-2xl mb-1">😔</div>
+                      <div class="text-xs font-medium">Sad</div>
+                    </div>
+                  </label>
+                </div>
+                <div>
+                  <label class="mood-option">
+                    <input
+                      type="radio"
+                      name={f[:mood].name}
+                      id="mood-anxious"
+                      value="anxious"
+                      class="sr-only peer"
+                      checked={f[:mood].value == "anxious"}
+                    />
+                    <div class="cursor-pointer text-center p-2 rounded-lg border-2 border-transparent peer-checked:border-indigo-500 peer-checked:bg-indigo-50 hover:bg-gray-50">
+                      <div class="text-2xl mb-1">😰</div>
+                      <div class="text-xs font-medium">Anxious</div>
+                    </div>
+                  </label>
+                </div>
+                <div>
+                  <label class="mood-option">
+                    <input
+                      type="radio"
+                      name={f[:mood].name}
+                      id="mood-angry"
+                      value="angry"
+                      class="sr-only peer"
+                      checked={f[:mood].value == "angry"}
+                    />
+                    <div class="cursor-pointer text-center p-2 rounded-lg border-2 border-transparent peer-checked:border-indigo-500 peer-checked:bg-indigo-50 hover:bg-gray-50">
+                      <div class="text-2xl mb-1">😠</div>
+                      <div class="text-xs font-medium">Angry</div>
+                    </div>
+                  </label>
+                </div>
+                <div>
+                  <label class="mood-option">
+                    <input
+                      type="radio"
+                      name={f[:mood].name}
+                      id="mood-tired"
+                      value="tired"
+                      class="sr-only peer"
+                      checked={f[:mood].value == "tired"}
+                    />
+                    <div class="cursor-pointer text-center p-2 rounded-lg border-2 border-transparent peer-checked:border-indigo-500 peer-checked:bg-indigo-50 hover:bg-gray-50">
+                      <div class="text-2xl mb-1">😴</div>
+                      <div class="text-xs font-medium">Tired</div>
+                    </div>
+                  </label>
+                </div>
+              </div>
+              <%= for msg <- MindSanctuaryWeb.CoreComponents.translate_errors(@changeset.errors, :mood) do %>
+                <p class="mt-1.5 flex gap-2 items-center text-sm text-error">
+                  <.icon name="hero-exclamation-circle" class="size-5" />
+                  {msg}
+                </p>
+              <% end %>
+            </div>
+
+            <div>
+              <label for="journal_entry" class="block text-sm font-medium text-gray-700">
+                Journal Entry
+              </label>
+              <div class="mt-1">
+                <.input
+                  field={f[:journal_entry]}
+                  type="textarea"
+                  rows="5"
+                  placeholder="Write your thoughts here..."
+                />
+              </div>
+              <p class="mt-2 text-sm text-gray-500">
+                Writing down your thoughts can help relieve stress and provide clarity
+              </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div>
+                <label for="energy_level" class="block text-sm font-medium text-gray-700">
+                  Energy Level (1-10)
+                </label>
+                <div class="mt-1">
+                  <.input field={f[:energy_level]} type="number" min="1" max="10" />
+                </div>
+              </div>
+
+              <div>
+                <label for="stress_level" class="block text-sm font-medium text-gray-700">
+                  Stress Level (1-10)
+                </label>
+                <div class="mt-1">
+                  <.input field={f[:stress_level]} type="number" min="1" max="10" />
+                </div>
+              </div>
+
+              <div>
+                <label for="sleep_hours" class="block text-sm font-medium text-gray-700">
+                  Hours of Sleep
+                </label>
+                <div class="mt-1">
+                  <.input field={f[:sleep_hours]} type="number" step="0.5" min="0" max="24" />
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <button type="submit" class="text-gray-900 bg-gradient-to-r from-red-200 via-red-300 to-yellow-200 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-red-100 dark:focus:ring-red-400 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Save Entry</button>
+            </div>
+          </.form>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+        <div class="px-4 py-5 sm:px-6 bg-indigo-50">
+          <h2 class="text-lg leading-6 font-medium text-gray-900">
+            Recent Entries
+          </h2>
+          <p class="mt-1 max-w-2xl text-sm text-gray-500">
+            Your mood history
+          </p>
+        </div>
+        <div class="border-t border-gray-200">
+          <ul role="list" class="divide-y divide-gray-200">
+            <%= if Enum.empty?(@entries) do %>
+              <li class="px-4 py-4 sm:px-6">
+                <p class="text-sm text-gray-500 italic">
+                  No entries yet. Start tracking your mood today!
+                </p>
+              </li>
+            <% else %>
+              <%= for entry <- Enum.take(@entries, 5) do %>
+                <li class="px-4 py-4 sm:px-6">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                      <div class="text-2xl mr-3">
+                        <%= case entry.mood do %>
+                          <% "happy" -> %>
+                            😊
+                          <% "calm" -> %>
+                            😌
+                          <% "neutral" -> %>
+                            😐
+                          <% "sad" -> %>
+                            😔
+                          <% "anxious" -> %>
+                            😰
+                          <% "angry" -> %>
+                            😠
+                          <% "tired" -> %>
+                            😴
+                          <% _ -> %>
+                            😐
+                        <% end %>
+                      </div>
+                      <div>
+                        <p class="text-sm font-medium text-gray-900">
+                          {String.capitalize(entry.mood)}
+                        </p>
+                        <p class="text-xs text-gray-500">
+                          {Calendar.strftime(entry.inserted_at, "%B %d, %Y at %I:%M %p")}
+                        </p>
+                      </div>
+                    </div>
+                    <div>
+                      <button
+                        phx-click="delete"
+                        phx-value-id={entry.id}
+                        data-confirm="Are you sure?"
+                        class="text-xs text-red-600 hover:text-red-900"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                  <%= if entry.journal_entry && entry.journal_entry != "" do %>
+                    <div class="mt-2">
+                      <p class="text-sm text-gray-600 line-clamp-2">
+                        {entry.journal_entry}
+                      </p>
+                    </div>
+                  <% end %>
+                  <div class="mt-2 flex space-x-4 text-xs text-gray-500">
+                    <%= if entry.energy_level do %>
+                      <div>Energy: {entry.energy_level}/10</div>
+                    <% end %>
+                    <%= if entry.stress_level do %>
+                      <div>Stress: {entry.stress_level}/10</div>
+                    <% end %>
+                    <%= if entry.sleep_hours do %>
+                      <div>Sleep: {entry.sleep_hours} hrs</div>
+                    <% end %>
+                  </div>
+                </li>
+              <% end %>
+            <% end %>
+          </ul>
+        </div>
+        <%= if length(@entries) > 5 do %>
+          <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+            <a href="#" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">
+              View all entries <span aria-hidden="true">&rarr;</span>
+            </a>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+    <footer class="mx-auto max-w-7xl px-6 pb-12 pt-6 lg:px-8">
+    <div class="flex flex-col items-center justify-between gap-4 border-t border-base-300 pt-6 sm:flex-row">
+      <p class="text-xs text-base-content/60">© <%= Date.utc_today().year %> MindSanctuary. All rights reserved.</p>
+    </div>
+  </footer>
+</div>
