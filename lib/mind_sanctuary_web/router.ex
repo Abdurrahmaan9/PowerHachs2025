@@ -54,6 +54,8 @@ defmodule MindSanctuaryWeb.Router do
 
       live "/users/settings", UserLive.Settings, :edit
       live "/users/settings/confirm-email/:token", UserLive.Settings, :confirm_email
+      live "/mentorship", MentorshipLive.Index, :index
+      live "/mentorship/manage", MentorshipLive.Manage, :index
     end
 
     post "/users/update-password", UserSessionController, :update_password
