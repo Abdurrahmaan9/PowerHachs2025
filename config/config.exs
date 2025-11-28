@@ -44,6 +44,9 @@ config :mind_sanctuary, MindSanctuaryWeb.Endpoint,
 # at the `config/runtime.exs`.
 config :mind_sanctuary, MindSanctuary.Mailer, adapter: Swoosh.Adapters.Local
 
+# Configure Finch for HTTP requests (used by Swoosh)
+config :finch, :pools, default: [size: 10]
+
 # Configure esbuild (the version is required)
 config :esbuild,
   version: "0.25.4",
