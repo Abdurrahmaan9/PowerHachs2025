@@ -12,8 +12,8 @@ defmodule MindSanctuary.Application do
       MindSanctuary.Repo,
       {DNSCluster, query: Application.get_env(:mind_sanctuary, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: MindSanctuary.PubSub},
-      # Start a worker by calling: MindSanctuary.Worker.start_link(arg)
-      # {MindSanctuary.Worker, arg},
+      # Start the Finch HTTP client for sending emails
+      {Finch, name: MindSanctuary.Finch},
       # Start to serve requests, typically the last entry
       MindSanctuaryWeb.Endpoint
     ]
