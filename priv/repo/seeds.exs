@@ -13,7 +13,7 @@ now = DateTime.utc_now(:second)
 ######### ADMIN SEED ACCOUNT #################
 {:ok, admin} =
   %{
-    email: "admin@mindsanctuary.edu",
+    email: "admin@myspace.com",
     username: UniqueNamesGenerator.generate([:adjectives, :animals]),
     role: "admin"
   }
@@ -21,15 +21,15 @@ now = DateTime.utc_now(:second)
 
 admin
 |> MindSanctuary.Accounts.update_user_password(%{
-  password: "admin@mindsanctuary.edu",
-  password_confirmation: "admin@mindsanctuary.edu",
+  password: "admin@myspace.com",
+  password_confirmation: "admin@myspace.com",
   confirmed_at: now
 })
 
 ######### USER SEED ACCOUNT #################
 {:ok, user} =
   %{
-    email: "user@mindsanctuary.edu",
+    email: "user@myspace.com",
     username: UniqueNamesGenerator.generate([:adjectives, :animals]),
     role: "user"
   }
@@ -37,15 +37,15 @@ admin
 
 user
 |> MindSanctuary.Accounts.update_user_password(%{
-  password: "user@mindsanctuary.edu",
-  password_confirmation: "user@mindsanctuary.edu",
+  password: "user@myspace.com",
+  password_confirmation: "user@myspace.com",
   confirmed_at: now
 })
 
 ######### VOLUNTEER SEED ACCOUNT #################
 {:ok, volunteer} =
   %{
-    email: "volunteer@mindsanctuary.edu",
+    email: "volunteer@myspace.com",
     username: UniqueNamesGenerator.generate([:adjectives, :animals]),
     role: "volunteer"
   }
@@ -53,8 +53,8 @@ user
 
 volunteer
 |> MindSanctuary.Accounts.update_user_password(%{
-  password: "volunteer@mindsanctuary.edu",
-  password_confirmation: "volunteer@mindsanctuary.edu",
+  password: "volunteer@myspace.com",
+  password_confirmation: "volunteer@myspace.com",
   confirmed_at: now
 })
 
