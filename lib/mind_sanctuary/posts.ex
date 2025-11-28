@@ -146,7 +146,7 @@ defmodule MindSanctuary.Posts do
   def create_post_with_attachments(attrs, uploads \\ []) do
     Repo.transaction(fn ->
       with {:ok, post} <- create_post(attrs) do
-        attachments =
+        _attachments =
           uploads
           |> Enum.map(fn upload ->
             save_attachment(upload, post.id)
@@ -175,6 +175,15 @@ defmodule MindSanctuary.Posts do
       {:ok, %Attachment{}}
 
   """
+  def save_attachment(upload, post_id) when is_map(upload) do
+    # Handle LiveView uploaded file (already saved to disk)
+    attachment_attrs = Map.put(upload, :post_id, post_id)
+
+    %Attachment{}
+    |> Attachment.changeset(attachment_attrs)
+    |> Repo.insert()
+  end
+
   def save_attachment(%Plug.Upload{} = upload, post_id) do
     # Generate unique filename using timestamp
     timestamp = System.system_time(:millisecond)

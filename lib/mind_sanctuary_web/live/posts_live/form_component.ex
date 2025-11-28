@@ -1,10 +1,6 @@
 defmodule MindSanctuaryWeb.PostsLive.FormComponent do
   use MindSanctuaryWeb, :live_view
 
-  # Helper function to format file sizes
-  defp format_file_size(bytes) when bytes < 1_048_576, do: "#{Float.round(bytes / 1024, 1)} KB"
-  defp format_file_size(bytes), do: "#{Float.round(bytes / 1_048_576, 1)} MB"
-
   @impl true
   def mount(%{"id" => board_id}, _session, socket) do
     board = MindSanctuary.Posts.get_board!(board_id)
@@ -20,7 +16,11 @@ defmodule MindSanctuaryWeb.PostsLive.FormComponent do
         "visibility" => "all",
         "is_evidence" => false
       }))
-      |> assign(:uploaded_files, [])
+      |> allow_upload(:attachments,
+        accept: ~w(.jpg .jpeg .png .gif .pdf .doc .docx),
+        max_file_size: 10_000_000,
+        max_entries: 5
+      )
 
     {:ok, socket}
   end
@@ -38,10 +38,34 @@ defmodule MindSanctuaryWeb.PostsLive.FormComponent do
 
     IO.inspect(post_params, label: "Final post params")
 
-    # Get uploaded files from socket assigns
-    uploads = socket.assigns[:uploaded_files] || []
+    # Consume uploaded files
+    uploaded_files =
+      consume_uploaded_entries(socket, :attachments, fn %{path: path, client_name: name, content_type: type} ->
+        # Generate unique filename
+        timestamp = System.system_time(:millisecond)
+        filename = "#{timestamp}_#{name}"
 
-    case MindSanctuary.Posts.create_post_with_attachments(post_params, uploads) do
+        # Create uploads directory if it doesn't exist
+        upload_dir = "priv/static/uploads"
+        File.mkdir_p!(upload_dir)
+
+        # Save file to disk
+        file_path = Path.join(upload_dir, filename)
+        File.cp!(path, file_path)
+
+        # Return attachment data for database
+        %{
+          filename: filename,
+          original_filename: name,
+          content_type: type,
+          size: path |> File.stat!() |> Map.get(:size),
+          path: file_path
+        }
+      end)
+
+    IO.inspect(uploaded_files, label: "Uploaded files")
+
+    case MindSanctuary.Posts.create_post_with_attachments(post_params, uploaded_files) do
       {:ok, _post} ->
         {:noreply,
          socket
@@ -63,6 +87,11 @@ defmodule MindSanctuaryWeb.PostsLive.FormComponent do
   def handle_event("add-upload", %{"upload" => upload}, socket) do
     IO.inspect(upload, label: "File upload received")
     {:noreply, assign(socket, :uploaded_files, [upload | socket.assigns.uploaded_files || []])}
+  end
+
+  @impl true
+  def handle_event("cancel-upload", %{"ref" => ref}, socket) do
+    {:noreply, cancel_upload(socket, :attachments, ref)}
   end
 
   @impl true
@@ -167,7 +196,10 @@ defmodule MindSanctuaryWeb.PostsLive.FormComponent do
                 <label class="block text-sm font-medium text-gray-700 mb-2">
                   Attachments
                 </label>
-                <div class="border-2 border-gray-300 border-dashed rounded-lg p-6 text-center hover:border-gray-400 transition-colors">
+                <div
+                  phx-drop-target={@uploads.attachments.ref}
+                  class="border-2 border-gray-300 border-dashed rounded-lg p-6 text-center hover:border-gray-400 transition-colors"
+                >
                   <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
                     <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                   </svg>
@@ -180,21 +212,41 @@ defmodule MindSanctuaryWeb.PostsLive.FormComponent do
                         PNG, JPG, GIF, PDF up to 10MB each
                       </span>
                     </label>
-                    <input id="file-upload" name="file-upload" type="file" class="sr-only" multiple accept="image/*,.pdf,.doc,.docx" />
+                    <%= Phoenix.Component.live_file_input(@uploads.attachments) %>
                   </div>
                 </div>
 
-                <%= if @uploaded_files && @uploaded_files != [] do %>
+                <%= for entry <- @uploads.attachments.entries do %>
                   <div class="mt-4">
-                    <h4 class="text-sm font-medium text-gray-700 mb-2">Selected files:</h4>
-                    <ul class="space-y-2">
-                      <%= for upload <- @uploaded_files do %>
-                        <li class="flex items-center justify-between text-sm text-gray-600 bg-gray-50 px-3 py-2 rounded">
-                          <span><%= upload.filename %></span>
-                          <span class="text-xs text-gray-500"><%= format_file_size(upload.size) %></span>
-                        </li>
-                      <% end %>
-                    </ul>
+                    <div class="flex items-center justify-between text-sm text-gray-600 bg-gray-50 px-3 py-2 rounded">
+                      <span><%= entry.client_name %></span>
+                      <div class="flex items-center space-x-2">
+                        <%= if entry.progress > 0 do %>
+                          <span class="text-xs text-gray-500"><%= entry.progress %>%</span>
+                        <% end %>
+                        <button
+                          type="button"
+                          phx-click="cancel-upload"
+                          phx-value-ref={entry.ref}
+                          class="text-red-500 hover:text-red-700"
+                        >
+                          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                    <%= if entry.progress > 0 do %>
+                      <div class="mt-1 w-full bg-gray-200 rounded-full h-1">
+                        <div class="bg-blue-600 h-1 rounded-full transition-all duration-300" style={"width: #{entry.progress}%"}></div>
+                      </div>
+                    <% end %>
+                  </div>
+                <% end %>
+
+                <%= for err <- @uploads.attachments.errors do %>
+                  <div class="mt-2 text-sm text-red-600">
+                    <%= err.message %>
                   </div>
                 <% end %>
               </div>
