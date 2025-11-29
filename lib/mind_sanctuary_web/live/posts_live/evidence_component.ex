@@ -24,7 +24,7 @@ defmodule MindSanctuaryWeb.PostsLive.EvidenceComponent do
   @impl true
   def render(assigns) do
     ~H"""
-      <div class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+      <div class="min-h-screen bg-gradient-to-br from-blue-100 via-white to-purple-100">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div class="mb-12">
             <div class="flex justify-between items-end">
