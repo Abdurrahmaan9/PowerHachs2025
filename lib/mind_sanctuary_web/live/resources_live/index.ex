@@ -11,15 +11,65 @@ defmodule MindSanctuaryWeb.ResourcesLive.Index do
       resources
       |> Enum.filter(& &1.is_featured)
 
+    # Default SOS contacts
+    sos_contacts = [
+      %{
+        id: :sos_1,
+        title: "National Suicide Prevention Lifeline",
+        description: "24/7 free and confidential support for people in distress",
+        url: "https://suicidepreventionlifeline.org",
+        type: "contact",
+        is_featured: false,
+        inserted_at: DateTime.utc_now(),
+        category: "safety",
+        access_level: "public"
+      },
+      %{
+        id: :sos_2,
+        title: "Crisis Text Line",
+        description: "Text HOME to 741741 from anywhere in the US, anytime, about any type of crisis",
+        url: "https://www.crisistextline.org",
+        type: "contact",
+        is_featured: false,
+        inserted_at: DateTime.utc_now(),
+        category: "safety",
+        access_level: "public"
+      },
+      %{
+        id: :sos_3,
+        title: "SAMHSA National Helpline",
+        description: "Treatment referral and information service 1-800-662-HELP (4357)",
+        url: "https://www.samhsa.gov/find-help/national-helpline",
+        type: "contact",
+        is_featured: false,
+        inserted_at: DateTime.utc_now(),
+        category: "safety",
+        access_level: "public"
+      },
+      %{
+        id: :sos_4,
+        title: "The Trevor Project",
+        description: "Crisis intervention and suicide prevention services for LGBTQ youth",
+        url: "https://www.thetrevorproject.org",
+        type: "contact",
+        is_featured: false,
+        inserted_at: DateTime.utc_now(),
+        category: "safety",
+        access_level: "public"
+      }
+    ]
+
+    all_resources = resources ++ sos_contacts
+
     form = to_form(%{"q" => ""})
 
     {:ok,
      socket
      |> assign(page_title: "Resource Hub")
-     |> assign(form: form, resources: resources, filtered_resources: resources)
+     |> assign(form: form, resources: all_resources, filtered_resources: all_resources)
      |> assign(:changeset, to_form(Resources.change_resource(%Resource{})))
      |> assign(:current_filter, "all")
-     |> assign(:resources, resources)
+     |> assign(:sos_contacts, sos_contacts)
      |> assign(:resource, %Resource{})
      |> assign(:featured_resources, featured_resources)
      |> assign(:show_form, false)
@@ -33,6 +83,28 @@ defmodule MindSanctuaryWeb.ResourcesLive.Index do
     {:noreply,
      socket
      |> assign(:params, params)}
+  end
+
+  @impl true
+  def handle_event("filter_resources", %{"category" => category}, socket) do
+    filtered_resources =
+      case category do
+        "all" ->
+          socket.assigns.resources
+        "articles" ->
+          Enum.filter(socket.assigns.resources, &(&1.type == "article"))
+        "audio" ->
+          Enum.filter(socket.assigns.resources, &(&1.type == "audio"))
+        "contacts" ->
+          Enum.filter(socket.assigns.resources, &(&1.type == "contact"))
+        _ ->
+          socket.assigns.resources
+      end
+
+    {:noreply,
+     socket
+     |> assign(:current_filter, category)
+     |> assign(:filtered_resources, filtered_resources)}
   end
 
   @impl true
@@ -52,25 +124,31 @@ defmodule MindSanctuaryWeb.ResourcesLive.Index do
 
   @impl true
   def handle_event("delete", %{"id" => id}, socket) do
-    resource = Resources.get_resource!(id)
-    {:ok, _} = Resources.delete_resource(resource)
+    # Don't allow deletion of SOS contacts (they have atom ids)
+    if is_atom(id) do
+      {:noreply, put_flash(socket, :error, "Cannot delete default SOS contacts")}
+    else
+      resource = Resources.get_resource!(id)
+      {:ok, _} = Resources.delete_resource(resource)
 
-    resources = Resources.list_resources(socket.assigns.current_scope)
+      resources = Resources.list_resources(socket.assigns.current_scope)
+      all_resources = resources ++ socket.assigns.sos_contacts
 
-    featured_resources =
-      resources
-      |> Enum.filter(fn
-        r -> r.is_featured == true
-      end)
+      featured_resources =
+        all_resources
+        |> Enum.filter(fn
+          r -> r.is_featured == true
+        end)
 
-    {:noreply,
-     socket
-     |> assign(
-       resources: resources,
-       filtered_resources: resources,
-       featured_resources: featured_resources
-     )
-     |> put_flash(:info, "Resource deleted successfully")}
+      {:noreply,
+       socket
+       |> assign(
+         resources: all_resources,
+         filtered_resources: all_resources,
+         featured_resources: featured_resources
+       )
+       |> put_flash(:info, "Resource deleted successfully")}
+    end
   end
 
   @impl true
@@ -111,11 +189,16 @@ defmodule MindSanctuaryWeb.ResourcesLive.Index do
   end
 
   defp save_resource(socket, _, resource_params) do
+    # Only upload file if upload_file is true
     url =
-      case Resources.upload_file(socket, "/resources") do
-        {:error, _e} -> "https://example.com/404"
-        url when is_list(url) -> List.first(url)
-        _ -> "https://example.com/404"
+      if resource_params["upload_file"] == "true" do
+        case Resources.upload_file(socket, "/resources") do
+          {:error, _e} -> resource_params["url"] || "https://example.com/404"
+          url when is_list(url) -> List.first(url)
+          _ -> resource_params["url"] || "https://example.com/404"
+        end
+      else
+        resource_params["url"]
       end
 
     resource_params =
@@ -124,16 +207,24 @@ defmodule MindSanctuaryWeb.ResourcesLive.Index do
 
     case Resources.create_resource(resource_params) do
       {:ok, _resource} ->
+        resources = Resources.list_resources(socket.assigns.current_scope)
+        all_resources = resources ++ socket.assigns.sos_contacts
+        featured_resources = Enum.filter(all_resources, & &1.is_featured)
+
         {:noreply,
          socket
-         |> put_flash(:info, "Resource created successfully")
-         |> push_navigate(to: ~p"/resources")}
+         |> assign(:resources, all_resources)
+         |> assign(:featured_resources, featured_resources)
+         |> assign(:filtered_resources, all_resources)
+         |> assign(:show_form, false)
+         |> assign(:changeset, to_form(Resources.change_resource(%Resource{})))
+         |> put_flash(:info, "Resource created successfully")}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply,
          socket
          |> put_flash(:error, "Resource could not be created")
-         |> assign(form: to_form(changeset))}
+         |> assign(changeset: to_form(changeset))}
     end
   end
 end
