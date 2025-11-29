@@ -137,53 +137,148 @@ defmodule MindSanctuaryWeb.MentorshipLive.Manage do
   @impl true
   def render(assigns) do
     ~H"""
-    <Layouts.app flash={@flash} current_scope={%{user: @current_user}}>
-      <div class="max-w-4xl mx-auto px-4 py-8">
-        <.header>
-          Mentorship Management
-          <:subtitle>Manage mentorship applications from users seeking guidance</:subtitle>
-        </.header>
+    <div class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+      <!-- Background Elements -->
+      <div class="absolute inset-0 overflow-hidden">
+        <div class="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-blue-400/20 to-purple-400/20 rounded-full blur-3xl"></div>
+        <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br from-purple-400/20 to-pink-400/20 rounded-full blur-3xl"></div>
+      </div>
+
+      <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <!-- Header Section -->
+        <div class="text-center mb-12">
+          <div class="flex items-center justify-center mb-4">
+            <div class="w-16 h-16 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center">
+              <.icon name="hero-academic-cap" class="w-8 h-8 text-white" />
+            </div>
+          </div>
+          <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Mentorship Management</span>
+          </h1>
+          <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+            Manage mentorship applications from users seeking guidance and support
+          </p>
+        </div>
+
+        <!-- Stats Overview -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+          <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-white/20 shadow-lg">
+            <div class="flex items-center">
+              <div class="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center">
+                <.icon name="hero-clock" class="w-6 h-6 text-amber-600" />
+              </div>
+              <div class="ml-4">
+                <p class="text-sm text-gray-600">Pending</p>
+                <p class="text-2xl font-bold text-gray-900">{length(@pending_applications)}</p>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-white/20 shadow-lg">
+            <div class="flex items-center">
+              <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+                <.icon name="hero-check-circle" class="w-6 h-6 text-green-600" />
+              </div>
+              <div class="ml-4">
+                <p class="text-sm text-gray-600">Accepted</p>
+                <p class="text-2xl font-bold text-gray-900">
+                  {Enum.count(@all_mentorships, &(&1.status == "accepted"))}
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-white/20 shadow-lg">
+            <div class="flex items-center">
+              <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
+                <.icon name="hero-x-circle" class="w-6 h-6 text-red-600" />
+              </div>
+              <div class="ml-4">
+                <p class="text-sm text-gray-600">Rejected</p>
+                <p class="text-2xl font-bold text-gray-900">
+                  {Enum.count(@all_mentorships, &(&1.status == "rejected"))}
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-white/20 shadow-lg">
+            <div class="flex items-center">
+              <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+                <.icon name="hero-users" class="w-6 h-6 text-blue-600" />
+              </div>
+              <div class="ml-4">
+                <p class="text-sm text-gray-600">Total</p>
+                <p class="text-2xl font-bold text-gray-900">{length(@all_mentorships)}</p>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <!-- Pending Applications -->
-        <div class="mb-8">
-          <h2 class="text-xl font-semibold text-gray-900 mb-4">Pending Applications</h2>
+        <div class="mb-12">
+          <div class="flex items-center justify-between mb-6">
+            <h2 class="text-2xl font-bold text-gray-900">Pending Applications</h2>
+            <div class="flex items-center space-x-2">
+              <div class="w-2 h-2 bg-amber-400 rounded-full animate-pulse"></div>
+              <span class="text-sm text-gray-600">
+                {length(@pending_applications)} awaiting review
+              </span>
+            </div>
+          </div>
 
           <%= if @pending_applications == [] do %>
-            <div class="bg-gray-50 rounded-lg p-6 text-center">
-              <p class="text-gray-600">No pending applications at the moment.</p>
+            <div class="bg-white/80 backdrop-blur-sm rounded-3xl p-12 text-center border border-white/20 shadow-lg">
+              <div class="w-20 h-20 bg-gray-100 rounded-3xl flex items-center justify-center mx-auto mb-6">
+                <.icon name="hero-inbox" class="w-10 h-10 text-gray-400" />
+              </div>
+              <h3 class="text-xl font-bold text-gray-900 mb-3">No Pending Applications</h3>
+              <p class="text-gray-600 max-w-md mx-auto">
+                All mentorship applications have been reviewed. Check back later for new applications from users seeking guidance.
+              </p>
             </div>
           <% else %>
-            <div class="space-y-4">
+            <div class="space-y-6">
               <%= for mentorship <- @pending_applications do %>
-                <div class="bg-white shadow rounded-lg p-6">
-                  <div class="flex justify-between items-start">
+                <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-8 border border-white/20 shadow-lg hover:shadow-xl transition-all duration-300">
+                  <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
                     <div class="flex-1">
-                      <h3 class="font-medium text-gray-900">
-                        From: <%= get_mentee_name(mentorship) %>
-                      </h3>
-                      <p class="text-sm text-gray-600 mt-1">
-                        Applied: <%= format_date(mentorship.inserted_at) %>
-                      </p>
-                      <p class="text-sm text-gray-700 mt-2">
-                        <%= mentorship.message %>
-                      </p>
+                      <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-600 rounded-xl flex items-center justify-center">
+                          <.icon name="hero-user" class="w-6 h-6 text-white" />
+                        </div>
+                        <div class="ml-4">
+                          <h3 class="text-lg font-bold text-gray-900">
+                            From: <%= get_mentee_name(mentorship) %>
+                          </h3>
+                          <p class="text-sm text-gray-500">
+                            Applied: <%= format_date(mentorship.inserted_at) %>
+                          </p>
+                        </div>
+                      </div>
+
+                      <div class="bg-gray-50 rounded-xl p-4 mb-4">
+                        <p class="text-gray-700 leading-relaxed">
+                          <%= mentorship.message %>
+                        </p>
+                      </div>
                     </div>
-                    <div class="flex-shrink-0 ml-4">
-                      <div class="flex space-x-2">
-                        <.button
+
+                    <div class="flex-shrink-0">
+                      <div class="flex flex-col sm:flex-row gap-3">
+                        <button
                           phx-click="accept_application"
                           phx-value-mentorship_id={mentorship.id}
-                          class="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700"
+                          class="group inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-700 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105"
                         >
+                          <.icon name="hero-check-circle" class="w-5 h-5 mr-2 group-hover:scale-110 transition-transform duration-200" />
                           Accept
-                        </.button>
-                        <.button
+                        </button>
+                        <button
                           phx-click="reject_application"
                           phx-value-mentorship_id={mentorship.id}
-                          class="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700"
+                          class="group inline-flex items-center px-6 py-3 bg-gradient-to-r from-red-600 to-red-700 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105"
                         >
+                          <.icon name="hero-x-circle" class="w-5 h-5 mr-2 group-hover:scale-110 transition-transform duration-200" />
                           Reject
-                        </.button>
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -195,59 +290,98 @@ defmodule MindSanctuaryWeb.MentorshipLive.Manage do
 
         <!-- All Mentorships -->
         <div>
-          <h2 class="text-xl font-semibold text-gray-900 mb-4">All Your Mentorships</h2>
+          <div class="flex items-center justify-between mb-6">
+            <h2 class="text-2xl font-bold text-gray-900">All Your Mentorships</h2>
+            <div class="flex items-center space-x-2">
+              <div class="w-2 h-2 bg-blue-400 rounded-full"></div>
+              <span class="text-sm text-gray-600">
+                {length(@all_mentorships)} total mentorships
+              </span>
+            </div>
+          </div>
 
           <%= if @all_mentorships == [] do %>
-            <div class="bg-gray-50 rounded-lg p-6 text-center">
-              <p class="text-gray-600">You don't have any mentorships yet.</p>
+            <div class="bg-white/80 backdrop-blur-sm rounded-3xl p-12 text-center border border-white/20 shadow-lg">
+              <div class="w-20 h-20 bg-gray-100 rounded-3xl flex items-center justify-center mx-auto mb-6">
+                <.icon name="hero-academic-cap" class="w-10 h-10 text-gray-400" />
+              </div>
+              <h3 class="text-xl font-bold text-gray-900 mb-3">No Mentorships Yet</h3>
+              <p class="text-gray-600 max-w-md mx-auto">
+                You haven't established any mentorship relationships yet. Once users apply and you accept their applications, they'll appear here.
+              </p>
             </div>
           <% else %>
-            <div class="space-y-4">
+            <div class="space-y-6">
               <%= for mentorship <- @all_mentorships do %>
-                <div class="bg-white shadow rounded-lg p-6">
-                  <div class="flex justify-between items-start">
-                    <div>
-                      <h3 class="font-medium text-gray-900">
-                        Mentee: <%= get_mentee_name(mentorship) %>
-                      </h3>
-                      <p class="text-sm text-gray-600 mt-1">
-                        Applied: <%= format_date(mentorship.inserted_at) %>
-                      </p>
-                      <p class="text-sm text-gray-700 mt-2">
-                        <%= mentorship.message %>
-                      </p>
+                <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-8 border border-white/20 shadow-lg hover:shadow-xl transition-all duration-300">
+                  <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
+                    <div class="flex-1">
+                      <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+                          <.icon name="hero-user" class="w-6 h-6 text-white" />
+                        </div>
+                        <div class="ml-4">
+                          <h3 class="text-lg font-bold text-gray-900">
+                            Mentee: <%= get_mentee_name(mentorship) %>
+                          </h3>
+                          <p class="text-sm text-gray-500">
+                            Applied: <%= format_date(mentorship.inserted_at) %>
+                          </p>
+                        </div>
+                      </div>
+
+                      <div class="bg-gray-50 rounded-xl p-4 mb-4">
+                        <p class="text-gray-700 leading-relaxed">
+                          <%= mentorship.message %>
+                        </p>
+                      </div>
+
                       <%= if mentorship.status == "accepted" do %>
-                        <div class="mt-3">
-                          <%= case get_mentor_chat_id(mentorship) do %>
-                            <% nil -> %>
-                              <span class="text-sm text-gray-500">
-                                Chat room being created...
-                              </span>
-                            <% chat_id -> %>
-                              <.link
-                                navigate={~p"/chat/#{chat_id}"}
-                                class="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-indigo-600 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                              >
-                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
-                                </svg>
-                                Open Chat
-                              </.link>
-                          <% end %>
+                        <div class="bg-green-50 rounded-xl p-4 border border-green-200">
+                          <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                              <.icon name="hero-check-circle" class="w-5 h-5 text-green-600 mr-2" />
+                              <span class="text-green-800 font-medium">Mentorship Active</span>
+                            </div>
+                            <div>
+                              <%= case get_mentor_chat_id(mentorship) do %>
+                                <% nil -> %>
+                                  <div class="flex items-center text-green-700">
+                                    <.icon name="hero-clock" class="w-4 h-4 mr-1 animate-spin" />
+                                    <span class="text-sm">Chat room being created...</span>
+                                  </div>
+                                <% chat_id -> %>
+                                  <.link
+                                    navigate={~p"/chat/#{chat_id}"}
+                                    class="group inline-flex items-center px-4 py-2 bg-gradient-to-r from-green-600 to-emerald-700 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105"
+                                  >
+                                    <.icon name="hero-chat-bubble-left-right" class="w-4 h-4 mr-2 group-hover:scale-110 transition-transform duration-200" />
+                                    Open Chat
+                                  </.link>
+                              <% end %>
+                            </div>
+                          </div>
                         </div>
                       <% end %>
                     </div>
+
                     <div class="flex-shrink-0">
-                      <div class="flex flex-col items-end space-y-2">
-                        <span class={[
-                          "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium",
-                          mentorship.status == "pending" && "bg-yellow-100 text-yellow-800",
-                          mentorship.status == "accepted" && "bg-green-100 text-green-800",
-                          mentorship.status == "rejected" && "bg-red-100 text-red-800"
-                        ]}>
-                          <%= String.capitalize(mentorship.status) %>
-                        </span>
-                      </div>
+                      <span class={[
+                        "inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold",
+                        mentorship.status == "pending" && "bg-amber-100 text-amber-800",
+                        mentorship.status == "accepted" && "bg-green-100 text-green-800",
+                        mentorship.status == "rejected" && "bg-red-100 text-red-800"
+                      ]}>
+                        <.icon
+                          name={
+                            mentorship.status == "pending" && "hero-clock" ||
+                            mentorship.status == "accepted" && "hero-check-circle" ||
+                            "hero-x-circle"
+                          }
+                          class="w-4 h-4 mr-2"
+                        />
+                        <%= String.capitalize(mentorship.status) %>
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -256,7 +390,7 @@ defmodule MindSanctuaryWeb.MentorshipLive.Manage do
           <% end %>
         </div>
       </div>
-    </Layouts.app>
+    </div>
     """
   end
 

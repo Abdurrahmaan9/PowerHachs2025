@@ -1,106 +1,176 @@
-<div class="relative isolate">
-  <div class="absolute -z-10 inset-0 bg-gradient-to-b from-base-200/60 to-transparent"></div>
-
-  <section class="mx-auto max-w-7xl px-6 pt-10 pb-16 sm:pt-16 sm:pb-24 lg:flex lg:items-center lg:gap-12 lg:px-8">
-    <div class="mx-auto max-w-2xl lg:mx-0 lg:flex-auto">
-      <h1 class="text-4xl font-bold tracking-tight sm:text-6xl">
-        Gentle tools for everyday mental wellness
-      </h1>
-      <p class="mt-6 text-base leading-7 text-base-content/70">
-        Track moods, build habits, and reflect—privately. MindSanctuary helps you stay balanced with a calm, thoughtful experience designed for focus.
-      </p>
-      <div class="mt-8 flex items-center gap-4">
-        <a href={~p"/users/register"} class="inline-flex items-center justify-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-          Create your account
-        </a>
-        <a href={~p"/users/log-in"} class="text-sm font-semibold leading-6 hover:text-base-content/80">I already have an account</a>
-      </div>
-    </div>
-    <div class="mt-12 lg:mt-0 lg:flex-1">
-      <div class="relative mx-auto max-w-lg overflow-hidden rounded-2xl border border-base-300 bg-base-100 shadow">
-        <div class="absolute -inset-x-6 -top-24 h-48 bg-gradient-to-b from-indigo-500/20 to-transparent blur-2xl"></div>
-        <div class="p-6">
-          <div class="grid grid-cols-3 gap-3">
-            <div class="rounded-xl border border-base-300 p-4">
-              <div class="h-2 w-12 rounded-full bg-indigo-500/30"></div>
-              <div class="mt-3 h-24 rounded-lg bg-base-200"></div>
-            </div>
-            <div class="rounded-xl border border-base-300 p-4">
-              <div class="h-2 w-16 rounded-full bg-purple-500/30"></div>
-              <div class="mt-3 h-24 rounded-lg bg-base-200"></div>
-            </div>
-            <div class="rounded-xl border border-base-300 p-4">
-              <div class="h-2 w-10 rounded-full bg-emerald-500/30"></div>
-              <div class="mt-3 h-24 rounded-lg bg-base-200"></div>
-            </div>
-          </div>
-          <div class="mt-4 h-2 w-24 rounded-full bg-base-200"></div>
-          <div class="mt-2 h-2 w-40 rounded-full bg-base-200"></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="mx-auto max-w-7xl px-6 py-16 lg:px-8">
-    <div class="mx-auto max-w-2xl text-center">
-      <h2 class="text-2xl font-semibold tracking-tight sm:text-3xl">Built for clarity and calm</h2>
-      <p class="mt-3 text-base text-base-content/70">A thoughtfully designed set of tools to help you understand patterns and make progress—at your pace.</p>
-    </div>
-    <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      <div class="rounded-2xl border border-base-300 bg-base-100 p-6 shadow-sm transition hover:shadow">
-          <div class="flex-shrink-0 bg-indigo-500 rounded-md p-3">
-            <svg
-              class="h-6 w-6 text-white"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-          </div>
-          <h3 class="mt-4 text-base font-semibold">Mood Tracking</h3>
-        <p class="mt-2 text-sm text-base-content/70">Capture how you feel in seconds and see trends over time with clear, minimal charts.</p>
-      </div>
-      <div class="rounded-2xl border border-base-300 bg-base-100 p-6 shadow-sm transition hover:shadow">
-        <div class="h-10 w-10 rounded-lg bg-purple-600/10 ring-1 ring-purple-600/20"></div>
-        <h3 class="mt-4 text-base font-semibold">Habits & Routines</h3>
-        <p class="mt-2 text-sm text-base-content/70">Build gentle routines and celebrate small wins with subtle progress cues.</p>
-      </div>
-      <div class="rounded-2xl border border-base-300 bg-base-100 p-6 shadow-sm transition hover:shadow">
-        <div class="h-10 w-10 rounded-lg bg-emerald-600/10 ring-1 ring-emerald-600/20"></div>
-        <h3 class="mt-4 text-base font-semibold">Private by Default</h3>
-        <p class="mt-2 text-sm text-base-content/70">Your data stays yours. Privacy-first design with secure sessions and minimal footprint.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="mx-auto max-w-7xl px-6 pb-16 lg:px-8">
-    <div class="rounded-3xl border border-base-300 bg-base-100 p-8 lg:p-10">
-      <div class="grid items-center gap-8 lg:grid-cols-3">
-        <div class="lg:col-span-2">
-          <blockquote class="text-base leading-7 text-base-content/80">
-            “MindSanctuary feels like breathing room. It’s the only tool I open when I need to get back to center.”
-          </blockquote>
-          <div class="mt-3 text-sm font-semibold">A mindful user</div>
-        </div>
-        <div class="flex justify-start lg:justify-end">
-          <a href={~p"/users/register"} class="inline-flex items-center justify-center rounded-md bg-base-content px-4 py-2 text-sm font-semibold text-base-100 shadow-sm transition hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-base-content">
-            Start free
+<div class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+  <!-- Hero Section -->
+  <section class="relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-blue-600/10 to-purple-600/10"></div>
+    <div class="relative mx-auto max-w-7xl px-6 py-24 sm:px-8 lg:px-10">
+      <div class="text-center">
+        <h1 class="text-5xl md:text-7xl font-bold tracking-tight">
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
+            MindSanctuary
+          </span>
+        </h1>
+        <p class="mx-auto mt-6 max-w-2xl text-xl md:text-2xl text-gray-600 leading-relaxed">
+          Your gentle companion for mental wellness. Track moods, build habits, and find clarity in a calm, private space.
+        </p>
+        <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <a 
+            href={~p"/users/register"} 
+            class="group inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+          >
+            <.icon name="hero-sparkles" class="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform duration-300" />
+            Start Your Journey
+          </a>
+          <a 
+            href={~p"/users/log-in"} 
+            class="inline-flex items-center px-8 py-4 border-2 border-gray-300 text-gray-700 font-semibold rounded-2xl hover:border-blue-600 hover:text-blue-600 transition-all duration-300"
+          >
+            <.icon name="hero-arrow-right" class="w-5 h-5 mr-2" />
+            Sign In
           </a>
         </div>
       </div>
+      
+      <!-- Hero Visual -->
+      <div class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+        <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300 hover:scale-105">
+          <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mb-4">
+            <.icon name="hero-heart" class="w-6 h-6 text-white" />
+          </div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">Mood Tracking</h3>
+          <p class="text-gray-600 text-sm">Daily check-ins to understand your emotional patterns</p>
+        </div>
+        <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300 hover:scale-105">
+          <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center mb-4">
+            <.icon name="hero-calendar-days" class="w-6 h-6 text-white" />
+          </div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">Habit Building</h3>
+          <p class="text-gray-600 text-sm">Gentle reminders to build positive routines</p>
+        </div>
+        <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300 hover:scale-105">
+          <div class="w-12 h-12 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl flex items-center justify-center mb-4">
+            <.icon name="hero-shield-check" class="w-6 h-6 text-white" />
+          </div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">Privacy First</h3>
+          <p class="text-gray-600 text-sm">Your data stays yours, always secure and private</p>
+        </div>
+      </div>
     </div>
   </section>
 
-  <footer class="mx-auto max-w-7xl px-6 pb-12 pt-6 lg:px-8">
-    <div class="flex flex-col items-center justify-between gap-4 border-t border-base-300 pt-6 sm:flex-row">
-      <p class="text-xs text-base-content/60">© <%= Date.utc_today().year %> MindSanctuary. All rights reserved.</p>
+  <!-- Features Section -->
+  <section class="py-24 bg-white">
+    <div class="mx-auto max-w-7xl px-6 sm:px-8 lg:px-10">
+      <div class="text-center mb-16">
+        <h2 class="text-4xl font-bold text-gray-900 mb-4">
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
+            Designed for Your Wellbeing
+          </span>
+        </h2>
+        <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+          Thoughtfully crafted tools that help you navigate your mental health journey with clarity and compassion.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="group bg-gradient-to-br from-blue-50 to-blue-100 rounded-3xl p-8 border border-blue-200 hover:shadow-lg transition-all duration-300">
+          <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+            <.icon name="hero-chart-bar" class="w-8 h-8 text-white" />
+          </div>
+          <h3 class="text-2xl font-bold text-gray-900 mb-4">Visual Insights</h3>
+          <p class="text-gray-700 leading-relaxed">
+            Beautiful charts and patterns that help you understand your emotional landscape without overwhelming complexity.
+          </p>
+        </div>
+
+        <div class="group bg-gradient-to-br from-purple-50 to-purple-100 rounded-3xl p-8 border border-purple-200 hover:shadow-lg transition-all duration-300">
+          <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+            <.icon name="hero-bell" class="w-8 h-8 text-white" />
+          </div>
+          <h3 class="text-2xl font-bold text-gray-900 mb-4">Gentle Reminders</h3>
+          <p class="text-gray-700 leading-relaxed">
+            Kind notifications that respect your space and help you stay connected to your wellness goals.
+          </p>
+        </div>
+
+        <div class="group bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-3xl p-8 border border-emerald-200 hover:shadow-lg transition-all duration-300">
+          <div class="w-16 h-16 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+            <.icon name="hero-lock-closed" class="w-8 h-8 text-white" />
+          </div>
+          <h3 class="text-2xl font-bold text-gray-900 mb-4">Complete Privacy</h3>
+          <p class="text-gray-700 leading-relaxed">
+            End-to-end encryption ensures your personal thoughts and feelings remain completely private.
+          </p>
+        </div>
+
+        <div class="group bg-gradient-to-br from-amber-50 to-amber-100 rounded-3xl p-8 border border-amber-200 hover:shadow-lg transition-all duration-300">
+          <div class="w-16 h-16 bg-gradient-to-br from-amber-500 to-amber-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+            <.icon name="hero-users" class="w-8 h-8 text-white" />
+          </div>
+          <h3 class="text-2xl font-bold text-gray-900 mb-4">Community Support</h3>
+          <p class="text-gray-700 leading-relaxed">
+            Connect with peers and mentors who understand your journey and offer genuine support.
+          </p>
+        </div>
+
+        <div class="group bg-gradient-to-br from-rose-50 to-rose-100 rounded-3xl p-8 border border-rose-200 hover:shadow-lg transition-all duration-300">
+          <div class="w-16 h-16 bg-gradient-to-br from-rose-500 to-rose-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+            <.icon name="hero-book-open" class="w-8 h-8 text-white" />
+          </div>
+          <h3 class="text-2xl font-bold text-gray-900 mb-4">Resource Library</h3>
+          <p class="text-gray-700 leading-relaxed">
+            Curated articles, exercises, and tools to support your mental health education and growth.
+          </p>
+        </div>
+
+        <div class="group bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-3xl p-8 border border-indigo-200 hover:shadow-lg transition-all duration-300">
+          <div class="w-16 h-16 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+            <.icon name="hero-light-bulb" class="w-8 h-8 text-white" />
+          </div>
+          <h3 class="text-2xl font-bold text-gray-900 mb-4">Smart Insights</h3>
+          <p class="text-gray-700 leading-relaxed">
+            AI-powered suggestions that help you identify patterns and discover personalized coping strategies.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="py-24 bg-gradient-to-br from-blue-600 to-purple-600">
+    <div class="mx-auto max-w-4xl px-6 text-center sm:px-8 lg:px-10">
+      <h2 class="text-4xl font-bold text-white mb-6">
+        Begin Your Wellness Journey Today
+      </h2>
+      <p class="text-xl text-blue-100 mb-10">
+        Join thousands who have found clarity, peace, and support through MindSanctuary.
+      </p>
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a 
+          href={~p"/users/register"} 
+          class="group inline-flex items-center px-8 py-4 bg-white text-blue-600 font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+        >
+          <.icon name="hero-sparkles" class="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform duration-300" />
+          Get Started Free
+        </a>
+        <a 
+          href={~p"/users/log-in"} 
+          class="inline-flex items-center px-8 py-4 border-2 border-white/30 text-white font-semibold rounded-2xl hover:border-white transition-all duration-300"
+        >
+          <.icon name="hero-arrow-right" class="w-5 h-5 mr-2" />
+          Sign In
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-white py-12">
+    <div class="mx-auto max-w-7xl px-6 sm:px-8 lg:px-10">
+      <div class="text-center">
+        <p class="text-gray-400">
+          © <%= Date.utc_today().year %> MindSanctuary. Your sanctuary for mental wellness.
+        </p>
+      </div>
     </div>
   </footer>
 </div>

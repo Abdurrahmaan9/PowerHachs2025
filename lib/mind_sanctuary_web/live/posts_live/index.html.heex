@@ -1,54 +1,172 @@
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-   <div class="mb-8 flex justify-between items-center">
-   <div>
-   <h1 class="text-3xl font-bold text-gray-900">Support Boards</h1>
-   <p class="mt-2 text-lg text-gray-600">
-      Find a safe space to share and connect with others who understand
-   </p>
-   </div>
-   <%= if @current_scope.user.role == "admin" do %>
-   <div>
-      <.link navigate={~p"/posts/evidence"} class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-         </svg>
-         View Evidence
-      </.link>
-   </div>
-   <% end %>
-   </div>
-
-   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-   <%= for board <- @boards do %>
-      <div class="bg-white overflow-hidden shadow rounded-lg hover:shadow-lg transition-shadow duration-300">
-         <div class="px-4 py-5 sm:p-6">
-         <div class="flex items-center mb-4">
-            <div class={"flex-shrink-0 bg-#{board.color}-500 rounded-md p-3"}>
-               <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" />
-               </svg>
-            </div>
-            <div class="ml-4">
-               <h3 class="text-lg font-medium text-gray-900">
-               <%= board.name %>
-               </h3>
-               <p class="text-sm text-gray-500 capitalize">
-               <%= String.replace(board.category, "_", " ") %>
-               </p>
-            </div>
-         </div>
-         <p class="text-gray-600 text-sm">
-            <%= board.description %>
-         </p>
-         </div>
-         <div class="bg-gray-50 px-4 py-4 sm:px-6">
-         <div class="text-sm">
-            <.link navigate={~p"/posts/#{board.id}"} class="font-medium text-indigo-600 hover:text-indigo-500">
-               Enter board <span aria-hidden="true">&rarr;</span>
+<div class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <!-- Header Section -->
+    <div class="mb-12">
+      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
+        <div class="max-w-2xl">
+          <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Support Boards</span>
+          </h1>
+          <p class="text-xl text-gray-600 leading-relaxed">
+            Find a safe space to share and connect with others who understand your journey
+          </p>
+        </div>
+        <%= if @current_scope.user.role == "admin" do %>
+          <div class="flex-shrink-0">
+            <.link navigate={~p"/posts/evidence"} class="group inline-flex items-center px-6 py-3 bg-gradient-to-r from-red-500 to-red-600 text-white font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+              <.icon name="hero-document-text" class="w-5 h-5 mr-2 group-hover:translate-x-1 transition-transform duration-300" />
+              View Evidence
             </.link>
-         </div>
-         </div>
+          </div>
+        <% end %>
       </div>
-   <% end %>
-   </div>
+    </div>
+
+    <!-- Stats Overview -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+      <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-white/20 shadow-lg">
+        <div class="flex items-center">
+          <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+            <.icon name="hero-chat-bubble-left-right" class="w-6 h-6 text-blue-600" />
+          </div>
+          <div class="ml-4">
+            <p class="text-sm text-gray-600">Total Boards</p>
+            <p class="text-2xl font-bold text-gray-900">{length(@boards)}</p>
+          </div>
+        </div>
+      </div>
+      <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-white/20 shadow-lg">
+        <div class="flex items-center">
+          <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+            <.icon name="hero-users" class="w-6 h-6 text-green-600" />
+          </div>
+          <div class="ml-4">
+            <p class="text-sm text-gray-600">Active Users</p>
+            <p class="text-2xl font-bold text-gray-900">247</p>
+          </div>
+        </div>
+      </div>
+      <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-white/20 shadow-lg">
+        <div class="flex items-center">
+          <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
+            <.icon name="hero-document-text" class="w-6 h-6 text-purple-600" />
+          </div>
+          <div class="ml-4">
+            <p class="text-sm text-gray-600">Total Posts</p>
+            <p class="text-2xl font-bold text-gray-900">1,423</p>
+          </div>
+        </div>
+      </div>
+      <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-white/20 shadow-lg">
+        <div class="flex items-center">
+          <div class="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center">
+            <.icon name="hero-heart" class="w-6 h-6 text-amber-600" />
+          </div>
+          <div class="ml-4">
+            <p class="text-sm text-gray-600">Supports Given</p>
+            <p class="text-2xl font-bold text-gray-900">3,892</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Boards Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <%= for board <- @boards do %>
+        <%
+          color_classes = case board.category do
+            "anxiety" -> "from-blue-500 to-blue-600"
+            "depression" -> "from-purple-500 to-purple-600"
+            "stress" -> "from-green-500 to-green-600"
+            "trauma" -> "from-red-500 to-red-600"
+            "recovery" -> "from-emerald-500 to-emerald-600"
+            "general" -> "from-indigo-500 to-indigo-600"
+            _ -> "from-gray-500 to-gray-600"
+          end
+          
+          bg_color = case board.category do
+            "anxiety" -> "bg-blue-100 text-blue-600"
+            "depression" -> "bg-purple-100 text-purple-600"
+            "stress" -> "bg-green-100 text-green-600"
+            "trauma" -> "bg-red-100 text-red-600"
+            "recovery" -> "bg-emerald-100 text-emerald-600"
+            "general" -> "bg-indigo-100 text-indigo-600"
+            _ -> "bg-gray-100 text-gray-600"
+          end
+        %>
+        <div class="group relative bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100">
+          <!-- Gradient Overlay on Hover -->
+          <div class={"absolute inset-0 bg-gradient-to-br #{color_classes} opacity-0 group-hover:opacity-100 transition-opacity duration-300"}></div>
+          
+          <div class="relative p-8">
+            <!-- Board Header -->
+            <div class="flex items-start justify-between mb-6">
+              <div class="flex items-center">
+                <div class={"w-14 h-14 #{String.split(bg_color, " ") |> hd} rounded-2xl flex items-center justify-center group-hover:bg-white transition-all duration-300"}>
+                  <.icon 
+                    name="hero-chat-bubble-left-right" 
+                    class={"w-7 h-7 #{String.split(bg_color, " ") |> List.last} group-hover:scale-110 transition-transform duration-300"} 
+                  />
+                </div>
+                <div class="ml-4">
+                  <h3 class="text-xl font-bold text-gray-900 group-hover:text-white transition-colors duration-300">
+                    <%= board.name %>
+                  </h3>
+                  <p class="text-sm text-gray-500 capitalize group-hover:text-white/80 transition-colors duration-300">
+                    <%= String.replace(board.category, "_", " ") %>
+                  </p>
+                </div>
+              </div>
+              
+              <!-- Status Indicator -->
+              <div class="flex items-center space-x-2">
+                <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                <span class="text-sm text-gray-500 group-hover:text-white/80 transition-colors duration-300">Active</span>
+              </div>
+            </div>
+
+            <!-- Description -->
+            <p class="text-gray-600 mb-6 leading-relaxed group-hover:text-white/90 transition-colors duration-300">
+              <%= board.description %>
+            </p>
+
+            <!-- Footer with Action -->
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-4">
+                <div class="flex items-center text-sm text-gray-500 group-hover:text-white/80 transition-colors duration-300">
+                  <.icon name="hero-users" class="w-4 h-4 mr-1" />
+                  <span>23 active</span>
+                </div>
+                <div class="flex items-center text-sm text-gray-500 group-hover:text-white/80 transition-colors duration-300">
+                  <.icon name="hero-document-text" class="w-4 h-4 mr-1" />
+                  <span>142 posts</span>
+                </div>
+              </div>
+              
+              <.link 
+                navigate={~p"/posts/#{board.id}"} 
+                class="group inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105"
+              >
+                Enter
+                <.icon name="hero-arrow-right" class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
+              </.link>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Empty State -->
+    <%= if @boards == [] do %>
+      <div class="text-center py-16">
+        <div class="w-20 h-20 bg-gray-100 rounded-3xl flex items-center justify-center mx-auto mb-6">
+          <.icon name="hero-chat-bubble-left-right" class="w-10 h-10 text-gray-400" />
+        </div>
+        <h3 class="text-2xl font-bold text-gray-900 mb-4">No Support Boards Yet</h3>
+        <p class="text-gray-600 max-w-md mx-auto">
+          Support boards will be available soon. Check back later to connect with others on your wellness journey.
+        </p>
+      </div>
+    <% end %>
+  </div>
 </div>

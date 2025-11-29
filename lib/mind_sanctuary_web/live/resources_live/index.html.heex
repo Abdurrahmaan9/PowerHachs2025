@@ -1,64 +1,92 @@
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-  <div class="mb-8">
-    <h1 class="text-3xl font-bold text-gray-900">
-      Resource Hub
-    </h1>
-    <p class="mt-2 text-sm text-gray-600">
-      Access helpful resources, articles, and tools to support your mental wellness journey
-    </p>
-  </div>
-
-<!-- Add Resource Button (Admin Only) -->
-  <div class="mb-6 flex justify-between items-center">
-    <div class="flex space-x-4">
-      <button
-        phx-click="filter_resources"
-        phx-value-category="all"
-        class="px-4 py-2 text-sm font-medium rounded-md bg-indigo-100 text-indigo-800 hover:bg-indigo-200 transition-colors"
-      >
-        All Resources
-      </button>
-      <button
-        phx-click="filter_resources"
-        phx-value-category="articles"
-        class="px-4 py-2 text-sm font-medium rounded-md bg-gray-100 text-gray-800 hover:bg-gray-200 transition-colors"
-      >
-        Articles
-      </button>
-      <button
-        phx-click="filter_resources"
-        phx-value-category="audio"
-        class="px-4 py-2 text-sm font-medium rounded-md bg-gray-100 text-gray-800 hover:bg-gray-200 transition-colors"
-      >
-        Audio Files
-      </button>
-      <button
-        phx-click="filter_resources"
-        phx-value-category="contacts"
-        class="px-4 py-2 text-sm font-medium rounded-md bg-gray-100 text-gray-800 hover:bg-gray-200 transition-colors"
-      >
-        Contacts
-      </button>
+<div class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-700">Resource Hub</span>
+      </h1>
+      <p class="text-lg text-gray-600 max-w-2xl">
+        Access helpful resources, articles, and tools to support your mental wellness journey
+      </p>
     </div>
 
-<!-- Search Form -->
-    <.simple_form :let={s} for={%{}} phx-change="search">
-      <.input field={s[:q]} type="text" placeholder="Search resources..." />
-    </.simple_form>
+    <!-- Filter and Search Section -->
+    <div class="mb-6">
+      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+        <div class="flex flex-wrap gap-2">
+          <button
+            phx-click="filter_resources"
+            phx-value-category="all"
+            class={["px-3 py-1.5 text-sm font-semibold rounded-lg transition-all duration-200",
+              @current_filter == "all" && "bg-blue-600 text-white shadow-md hover:shadow-lg",
+              @current_filter != "all" && "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50"
+            ]}
+          >
+            <.icon name="hero-squares-2x2" class="w-4 h-4 mr-1.5" />
+            All Resources
+          </button>
+          <button
+            phx-click="filter_resources"
+            phx-value-category="articles"
+            class={["px-3 py-1.5 text-sm font-semibold rounded-lg transition-all duration-200",
+              @current_filter == "articles" && "bg-blue-600 text-white shadow-md hover:shadow-lg",
+              @current_filter != "articles" && "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50"
+            ]}
+          >
+            <.icon name="hero-document-text" class="w-4 h-4 mr-1.5" />
+            Articles
+          </button>
+          <button
+            phx-click="filter_resources"
+            phx-value-category="audio"
+            class={["px-3 py-1.5 text-sm font-semibold rounded-lg transition-all duration-200",
+              @current_filter == "audio" && "bg-blue-600 text-white shadow-md hover:shadow-lg",
+              @current_filter != "audio" && "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50"
+            ]}
+          >
+            <.icon name="hero-speaker-wave-2" class="w-4 h-4 mr-1.5" />
+            Audio Files
+          </button>
+          <button
+            phx-click="filter_resources"
+            phx-value-category="contacts"
+            class={["px-3 py-1.5 text-sm font-semibold rounded-lg transition-all duration-200",
+              @current_filter == "contacts" && "bg-blue-600 text-white shadow-md hover:shadow-lg",
+              @current_filter != "contacts" && "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50"
+            ]}
+          >
+            <.icon name="hero-address-book" class="w-4 h-4 mr-1.5" />
+            Contacts
+          </button>
+        </div>
 
-    <%= if @current_scope.user && @current_scope.user.role == "admin" do %>
-      <button
-        phx-click="show_resource_form"
-        class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-      >
-        <svg class="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4">
-          </path>
-        </svg>
-        Add New Resource
-      </button>
-    <% end %>
-  </div>
+        <!-- Search Form -->
+        <div class="flex items-center gap-3">
+          <.simple_form :let={s} for={%{}} phx-change="search" class="flex-1 max-w-md">
+            <div class="relative">
+              <.input 
+                field={s[:q]} 
+                type="text" 
+                placeholder="Search resources..."
+                class="pl-9 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+              />
+              <div class="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none">
+                <.icon name="hero-magnifying-glass" class="w-4 h-4 text-gray-400" />
+              </div>
+            </div>
+          </.simple_form>
+
+          <%= if @current_scope.user && @current_scope.user.role == "admin" do %>
+            <button
+              phx-click="show_resource_form"
+              class="group inline-flex items-center px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-200"
+            >
+              <.icon name="hero-plus" class="w-4 h-4 mr-2 group-hover:rotate-90 transition-transform duration-300" />
+              Add New Resource
+            </button>
+          <% end %>
+        </div>
+      </div>
+    </div>
 
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
     <!-- Main Content Area -->
@@ -70,22 +98,22 @@
         show
         on_cancel={JS.navigate(~p"/resources")}
       >
-        <div class="px-4 py-5 sm:px-6 bg-indigo-50">
-          <h2 class="text-lg leading-6 font-medium text-gray-900">
+        <div class="bg-blue-600 px-6 py-4">
+          <h2 class="text-xl font-bold text-white">
             {if @editing_resource, do: "Edit Resource", else: "Add New Resource"}
           </h2>
-          <p class="mt-1 max-w-2xl text-sm text-gray-500">
+          <p class="mt-1 text-blue-100">
             Share helpful resources with the community
           </p>
         </div>
 
-        <div class="border-t border-gray-200 px-4 py-5 sm:p-6">
+        <div class="px-6 py-4">
           <.form
             :let={f}
             for={@changeset}
             phx-submit="save"
             phx-change="validate"
-            class="space-y-6"
+            class="space-y-4"
           >
             <div>
               <.input
@@ -99,6 +127,7 @@
                   {"Video", "video"},
                   {"Document", "document"}
                 ]}
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
               />
             </div>
 
@@ -116,6 +145,7 @@
                     {"Wellness", "wellness"},
                     {"Safety", "safety"}
                   ]}
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                 />
               </div>
 
@@ -130,6 +160,7 @@
                     {"Users Only", "user"},
                     {"Volunteer (Staff) Only", "volunteer"}
                   ]}
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                 />
               </div>
             </div>
@@ -139,6 +170,7 @@
                 field={f[:title]}
                 label="Title"
                 placeholder="Enter resource title..."
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
               />
             </div>
 
@@ -147,8 +179,9 @@
                 field={f[:description]}
                 label="Description"
                 type="textarea"
-                rows="3"
+                rows="4"
                 placeholder="Brief description of the resource..."
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
               />
             </div>
 
@@ -184,26 +217,30 @@
               />
             </div>
 
-            <div class="flex justify-end space-x-3">
+            <div class="flex justify-end space-x-3 pt-4 border-t border-gray-200">
               <button
                 type="button"
                 phx-click="cancel_resource_form"
-                class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                class="px-4 py-2 border border-gray-300 text-gray-700 bg-white font-semibold rounded-lg hover:bg-gray-50 transition-colors duration-200"
               >
                 Cancel
               </button>
-              <.button type="submit" variant="primary">
+              <button
+                type="submit"
+                class="group px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:shadow-lg hover:scale-105 transition-all duration-200"
+              >
+                <.icon name="hero-check" class="w-4 h-4 mr-2 group-hover:scale-110 transition-transform duration-200" />
                 {if @editing_resource, do: "Update Resource", else: "Create Resource"}
-              </.button>
+              </button>
             </div>
           </.form>
         </div>
       </.modal>
 
-<!-- Resources Grid -->
-      <div class="bg-white shadow overflow-hidden sm:rounded-lg">
-        <div class="px-4 py-5 sm:px-6 bg-indigo-50">
-          <h2 class="text-lg leading-6 font-medium text-gray-900">
+      <!-- Resources Grid -->
+      <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+        <div class="bg-blue-600 px-6 py-4">
+          <h2 class="text-xl font-bold text-white">
             <%= case @current_filter do %>
               <% "all" -> %>
                 All Resources
@@ -217,34 +254,23 @@
                 Resources
             <% end %>
           </h2>
-          <p class="mt-1 max-w-2xl text-sm text-gray-500">
-            <%= if @resources && length(@resources) > 0 do %>
-              Showing {length(@resources)} resources
+          <p class="mt-1 text-blue-100">
+            <%= if @filtered_resources && length(@filtered_resources) > 0 do %>
+              Showing {length(@filtered_resources)} resources
             <% else %>
               No resources found
             <% end %>
           </p>
         </div>
 
-        <div class="border-t border-gray-200">
-          <%= if Enum.empty?(@resources) do %>
-            <div class="px-4 py-12 sm:px-6 text-center">
-              <svg
-                class="mx-auto h-12 w-12 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                >
-                </path>
-              </svg>
-              <h3 class="mt-2 text-sm font-medium text-gray-900">No resources</h3>
-              <p class="mt-1 text-sm text-gray-500">
+        <div class="p-6">
+          <%= if Enum.empty?(@filtered_resources) do %>
+            <div class="text-center py-12">
+              <div class="w-16 h-16 bg-gray-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+                <.icon name="hero-document-text" class="w-8 h-8 text-gray-400" />
+              </div>
+              <h3 class="text-xl font-bold text-gray-900 mb-2">No resources</h3>
+              <p class="text-gray-600">
                 <%= if @current_scope.user && @current_scope.user.role == "admin" do %>
                   Get started by creating a new resource.
                 <% else %>
@@ -253,106 +279,116 @@
               </p>
             </div>
           <% else %>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
-              <%= for resource <- @resources do %>
-                <div class="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <%= for resource <- @filtered_resources do %>
+                <div class="group bg-white border border-gray-200 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden">
                   <%= if resource.is_featured do %>
-                    <div class="bg-indigo-100 text-indigo-800 text-xs font-medium px-3 py-1 rounded-t-lg">
+                    <div class="bg-yellow-400 text-white text-sm font-semibold px-3 py-1.5">
+                      <.icon name="hero-star" class="w-4 h-4 mr-1.5 inline" />
                       Featured
                     </div>
                   <% end %>
 
-                  <div class="p-5">
-                    <div class="flex items-start justify-between">
-                      <div class="flex items-center space-x-2 mb-3">
-                        <span class={"inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                        #{case resource.type do
-                            "article" -> "bg-blue-100 text-blue-800"
-                            "audio" -> "bg-green-100 text-green-800"
-                            "video" -> "bg-red-100 text-red-800"
-                            _ -> "bg-gray-100 text-gray-800"
-                          end}"}>
-                          {String.capitalize(resource.type)}
-                        </span>
+                  <div class="p-4">
+                    <div class="flex items-start justify-between mb-4">
+                      <div class="flex items-center space-x-3">
+                        <div class={"w-10 h-10 rounded-xl flex items-center justify-center
+                          #{case resource.type do
+                              "article" -> "bg-blue-100"
+                              "audio" -> "bg-green-100"
+                              "video" -> "bg-red-100"
+                              _ -> "bg-gray-100"
+                            end}"}>
+                          <.icon name={
+                            case resource.type do
+                              "article" -> "hero-document-text"
+                              "audio" -> "hero-speaker-wave-2"
+                              "video" -> "hero-video-camera"
+                              _ -> "hero-document"
+                            end
+                          } class={"w-5 h-5
+                            #{case resource.type do
+                                "article" -> "text-blue-600"
+                                "audio" -> "text-green-600"
+                                "video" -> "text-red-600"
+                                _ -> "text-gray-600"
+                              end}"} />
+                        </div>
+                        <div>
+                          <span class={"inline-flex items-center px-2 py-1 rounded-full text-sm font-semibold
+                            #{case resource.type do
+                                "article" -> "bg-blue-100 text-blue-800"
+                                "audio" -> "bg-green-100 text-green-800"
+                                "video" -> "bg-red-100 text-red-800"
+                                _ -> "bg-gray-100 text-gray-800"
+                              end}"}>
+                            {String.capitalize(resource.type)}
+                          </span>
+                        </div>
                       </div>
 
-                      <%= if @current_scope.user && @current_scope.user.role == "admin" do %>
+                      <%= if @current_scope.user && @current_scope.user.role == "admin" && !is_atom(resource.id) do %>
                         <div class="flex space-x-2">
                           <button
                             phx-click="edit_resource"
                             phx-value-id={resource.id}
-                            class="text-gray-400 hover:text-indigo-600 transition-colors"
+                            class="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors duration-200"
                           >
-                            <svg
-                              class="w-4 h-4"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                              >
-                              </path>
-                            </svg>
+                            <.icon name="hero-pencil" class="w-4 h-4" />
                           </button>
                           <button
                             phx-click="delete_resource"
                             phx-value-id={resource.id}
                             data-confirm="Are you sure you want to delete this resource?"
-                            class="text-gray-400 hover:text-red-600 transition-colors"
+                            class="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-200"
                           >
-                            <svg
-                              class="w-4 h-4"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                              >
-                              </path>
-                            </svg>
+                            <.icon name="hero-trash" class="w-4 h-4" />
                           </button>
                         </div>
                       <% end %>
                     </div>
 
-                    <h3 class="text-lg font-medium text-gray-900 mb-2">
+                    <h3 class="text-lg font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors duration-200">
                       {resource.title}
                     </h3>
 
-                    <p class="text-gray-600 text-sm mb-4 line-clamp-2">
+                    <p class="text-gray-600 text-sm mb-4 line-clamp-2 leading-relaxed">
                       {resource.description}
                     </p>
 
-                    <div class="flex items-center justify-between mt-4">
-                      <span class="text-xs text-gray-500">
-                        Added {Calendar.strftime(resource.inserted_at, "%b %d, %Y")}
-                      </span>
+                    <div class="flex items-center justify-between">
+                      <div class="flex items-center text-sm text-gray-500">
+                        <.icon name="hero-calendar" class="w-4 h-4 mr-1" />
+                        <%= if is_atom(resource.id) do %>
+                          Always Available
+                        <% else %>
+                          Added {Calendar.strftime(resource.inserted_at, "%b %d, %Y")}
+                        <% end %>
+                      </div>
 
                       <a
                         href={resource.url}
                         target="_blank"
-                        class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-full shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                        class="group inline-flex items-center px-3 py-1.5 bg-blue-600 text-white text-sm font-semibold rounded-lg shadow-md hover:shadow-lg hover:scale-105 transition-all duration-200"
                       >
                         <%= case resource.type do %>
                           <% "article" -> %>
+                            <.icon name="hero-book-open" class="w-4 h-4 mr-2" />
                             Read Article
                           <% "audio" -> %>
+                            <.icon name="hero-speaker-wave-2" class="w-4 h-4 mr-2" />
                             Listen
                           <% "contact" -> %>
+                            <.icon name="hero-address-book" class="w-4 h-4 mr-2" />
                             View Contact
                           <% "video" -> %>
+                            <.icon name="hero-video-camera" class="w-4 h-4 mr-2" />
                             Watch Video
                           <% _ -> %>
+                            <.icon name="hero-link" class="w-4 h-4 mr-2" />
                             View Resource
                         <% end %>
+                        <.icon name="hero-arrow-top-right-on-square" class="w-3.5 h-3.5 ml-1.5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-200" />
                       </a>
                     </div>
                   </div>
@@ -364,82 +400,74 @@
       </div>
     </div>
 
-<!-- Sidebar -->
+    <!-- Sidebar -->
     <div>
       <!-- Featured Resources -->
-      <div class="bg-white shadow overflow-hidden sm:rounded-lg mb-8">
-        <div class="px-4 py-5 sm:px-6 bg-indigo-50">
-          <h2 class="text-lg leading-6 font-medium text-gray-900">
+      <div class="bg-white rounded-xl shadow-lg overflow-hidden mb-6">
+        <div class="bg-blue-600 px-6 py-4">
+          <h2 class="text-xl font-bold text-white">
+            <.icon name="hero-star" class="w-5 h-5 mr-2 inline" />
             Featured Resources
           </h2>
-          <p class="mt-1 max-w-2xl text-sm text-gray-500">
+          <p class="mt-1 text-blue-100">
             Highlighted content
           </p>
         </div>
-        <div class="border-t border-gray-200">
-          <ul role="list" class="divide-y divide-gray-200">
+        <div class="p-4">
+          <ul role="list" class="space-y-3">
             <%= if Enum.empty?(@featured_resources) do %>
-              <li class="px-4 py-4 sm:px-6">
+              <li class="text-center py-6">
+                <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                  <.icon name="hero-star" class="w-5 h-5 text-gray-400" />
+                </div>
                 <p class="text-sm text-gray-500 italic">
                   No featured resources
                 </p>
               </li>
             <% else %>
               <%= for resource <- Enum.take(@featured_resources, 3) do %>
-                <li class="px-4 py-4 sm:px-6">
-                  <div class="flex items-start space-x-3">
+                <li class="group">
+                  <div class="flex items-start space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200 cursor-pointer">
                     <div class="flex-shrink-0">
-                      <div class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center">
-                        <svg
-                          class="w-4 h-4 text-indigo-600"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <%= case resource.type do %>
-                            <% "article" -> %>
-                              <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                              >
-                              </path>
-                            <% "audio" -> %>
-                              <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15.536a5 5 0 001.414-1.414m-1.414-2.829a5 5 0 010-7.07m1.414 1.414a1 1 0 01-1.414 1.415"
-                              >
-                              </path>
-                            <% "contact" -> %>
-                              <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                              >
-                              </path>
-                            <% _ -> %>
-                              <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                              >
-                              </path>
-                          <% end %>
-                        </svg>
+                      <div class={"w-10 h-10 rounded-xl flex items-center justify-center
+                        #{case resource.type do
+                            "article" -> "bg-blue-100"
+                            "audio" -> "bg-green-100"
+                            "video" -> "bg-red-100"
+                            _ -> "bg-gray-100"
+                          end}"}>
+                        <.icon name={
+                          case resource.type do
+                            "article" -> "hero-document-text"
+                            "audio" -> "hero-speaker-wave-2"
+                            "video" -> "hero-video-camera"
+                            _ -> "hero-document"
+                          end
+                        } class={"w-6 h-6
+                          #{case resource.type do
+                              "article" -> "text-blue-600"
+                              "audio" -> "text-green-600"
+                              "video" -> "text-red-600"
+                              _ -> "text-gray-600"
+                            end}"} />
                       </div>
                     </div>
                     <div class="flex-1 min-w-0">
-                      <p class="text-sm font-medium text-gray-900 truncate">
+                      <p class="text-sm font-semibold text-gray-900 truncate group-hover:text-blue-600 transition-colors duration-200">
                         {resource.title}
                       </p>
-                      <p class="text-xs text-gray-500 truncate">
+                      <p class="text-xs text-gray-500 truncate mt-1">
                         {String.capitalize(resource.type)}
                       </p>
+                    </div>
+                    <div class="flex-shrink-0">
+                      <a
+                        href={resource.url}
+                        target="_blank"
+                        class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors duration-200"
+                      >
+                        <.icon name="hero-arrow-top-right-on-square" class="w-3.5 h-3.5" />
+                      </a>
                     </div>
                   </div>
                 </li>
@@ -449,41 +477,54 @@
         </div>
       </div>
 
-<!-- Quick Stats -->
-      <div class="bg-white shadow overflow-hidden sm:rounded-lg">
-        <div class="px-4 py-5 sm:px-6 bg-indigo-50">
-          <h2 class="text-lg leading-6 font-medium text-gray-900">
+      <!-- Quick Stats -->
+      <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+        <div class="bg-blue-600 px-6 py-4">
+          <h2 class="text-xl font-bold text-white">
+            <.icon name="hero-chart-bar" class="w-5 h-5 mr-2 inline" />
             Resource Stats
           </h2>
         </div>
-        <div class="border-t border-gray-200 px-4 py-5 sm:p-6">
-          <dl class="grid grid-cols-1 gap-5 sm:grid-cols-2">
-            <div class="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6">
-              <dt class="text-sm font-medium text-gray-500 truncate">
-                Total Resources
-              </dt>
-              <dd class="mt-1 text-3xl font-semibold text-gray-900">
-                {length(@resources)}
-              </dd>
+        <div class="p-4">
+          <dl class="space-y-4">
+            <div class="bg-blue-50 p-4 rounded-xl">
+              <div class="flex items-center">
+                <div class="flex-shrink-0">
+                  <div class="w-10 h-10 bg-blue-500 rounded-xl flex items-center justify-center">
+                    <.icon name="hero-squares-2x2" class="w-5 h-5 text-white" />
+                  </div>
+                </div>
+                <div class="ml-3">
+                  <dt class="text-sm font-medium text-blue-600">
+                    Total Resources
+                  </dt>
+                  <dd class="mt-1 text-2xl font-bold text-blue-900">
+                    {length(@resources)}
+                  </dd>
+                </div>
+              </div>
             </div>
-            <div class="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6">
-              <dt class="text-sm font-medium text-gray-500 truncate">
-                Articles
-              </dt>
-              <dd class="mt-1 text-3xl font-semibold text-gray-900">
-                {Enum.count(@resources, &(&1.type == "article"))}
-              </dd>
+            <div class="bg-green-50 p-4 rounded-xl">
+              <div class="flex items-center">
+                <div class="flex-shrink-0">
+                  <div class="w-10 h-10 bg-green-500 rounded-xl flex items-center justify-center">
+                    <.icon name="hero-document-text" class="w-5 h-5 text-white" />
+                  </div>
+                </div>
+                <div class="ml-3">
+                  <dt class="text-sm font-medium text-green-600">
+                    Articles
+                  </dt>
+                  <dd class="mt-1 text-2xl font-bold text-green-900">
+                    {Enum.count(@resources, &(&1.type == "article"))}
+                  </dd>
+                </div>
+              </div>
             </div>
           </dl>
         </div>
       </div>
     </div>
   </div>
-  <footer class="mx-auto max-w-7xl px-6 pb-12 pt-6 lg:px-8">
-    <div class="flex flex-col items-center justify-between gap-4 border-t border-base-300 pt-6 sm:flex-row">
-      <p class="text-xs text-base-content/60">
-        © {Date.utc_today().year} MindSanctuary. All rights reserved.
-      </p>
-    </div>
-  </footer>
+</div>
 </div>
