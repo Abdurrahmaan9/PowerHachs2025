@@ -21,6 +21,7 @@ defmodule MindSanctuaryWeb.Router do
     pipe_through [:browser]
 
     live "/", HomeLive.Index, :index
+    live "/about", AboutLive.Index, :index
 
     live_session :current_user,
       on_mount: [{MindSanctuaryWeb.UserAuth, :mount_current_scope}] do

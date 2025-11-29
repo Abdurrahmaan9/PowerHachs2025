@@ -17,7 +17,7 @@ defmodule MindSanctuaryWeb.ResourcesLive.Index do
         id: :sos_1,
         title: "National Suicide Prevention Lifeline",
         description: "24/7 free and confidential support for people in distress",
-        url: "https://suicidepreventionlifeline.org",
+        url: "tel:988",
         type: "contact",
         is_featured: false,
         inserted_at: DateTime.utc_now(),
@@ -28,7 +28,7 @@ defmodule MindSanctuaryWeb.ResourcesLive.Index do
         id: :sos_2,
         title: "Crisis Text Line",
         description: "Text HOME to 741741 from anywhere in the US, anytime, about any type of crisis",
-        url: "https://www.crisistextline.org",
+        url: "tel:741741",
         type: "contact",
         is_featured: false,
         inserted_at: DateTime.utc_now(),
@@ -39,7 +39,7 @@ defmodule MindSanctuaryWeb.ResourcesLive.Index do
         id: :sos_3,
         title: "SAMHSA National Helpline",
         description: "Treatment referral and information service 1-800-662-HELP (4357)",
-        url: "https://www.samhsa.gov/find-help/national-helpline",
+        url: "tel:1-800-662-4357",
         type: "contact",
         is_featured: false,
         inserted_at: DateTime.utc_now(),
@@ -50,7 +50,7 @@ defmodule MindSanctuaryWeb.ResourcesLive.Index do
         id: :sos_4,
         title: "The Trevor Project",
         description: "Crisis intervention and suicide prevention services for LGBTQ youth",
-        url: "https://www.thetrevorproject.org",
+        url: "tel:1-866-488-7386",
         type: "contact",
         is_featured: false,
         inserted_at: DateTime.utc_now(),
@@ -80,9 +80,32 @@ defmodule MindSanctuaryWeb.ResourcesLive.Index do
 
   @impl true
   def handle_params(params, _uri, socket) do
-    {:noreply,
-     socket
-     |> assign(:params, params)}
+    socket = assign(socket, :params, params)
+
+    # Handle category parameter for direct tab navigation
+    case params do
+      %{"category" => category} when category in ["all", "articles", "audio", "contacts"] ->
+        filtered_resources =
+          case category do
+            "all" ->
+              socket.assigns.resources
+            "articles" ->
+              Enum.filter(socket.assigns.resources, &(&1.type == "article"))
+            "audio" ->
+              Enum.filter(socket.assigns.resources, &(&1.type == "audio"))
+            "contacts" ->
+              Enum.filter(socket.assigns.resources, &(&1.type == "contact"))
+            _ ->
+              socket.assigns.resources
+          end
+
+        {:noreply,
+         socket
+         |> assign(:current_filter, category)
+         |> assign(:filtered_resources, filtered_resources)}
+      _ ->
+        {:noreply, socket}
+    end
   end
 
   @impl true
