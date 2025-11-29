@@ -1,91 +1,143 @@
-# MindSanctuary - System overview (technical summary)
+# MySpace: A MindSanctuary - System Overview
 
-MindSanctuary is a non-clinical, community centered wellbeing SaaS built with Phoenix LiveView for reactive UI and Phoenix Channels for anonymous peer chat. Core subsystems:
+## Demo Accounts
 
-* Auth & Identity (normal users and volunteer roles; anonymous chat identity).
+You can use these accounts to explore the application:
 
-* Mood Tracker (daily check-ins, simple analytics).
+### User Accounts
+- **Username**: human_gorilla  
+  **Email**: user2@myspace.com  
+  **Password**: d+fTeOaCu4s7
 
-* Resource Hub (audio files, articles, contact info).
+- **Username**: fine_unicorn  
+  **Email**: user@myspace.com  
+  **Password**: JeUI9XnnpTCg
 
-* Anonymous Peer Support (real-time chat pairing normal users with volunteers).
+### Admin Account
+- **Email**: admin1@myspace.com  
+  **Password**: uQJ0jRxi5q+Y
 
-* Events / Workshops (listing, RSVP, calendar export).
+---
 
-* Admin & Volunteer dashboard (manage resources, see queue, moderate).
+MySpace: A MindSanctuary is a comprehensive mental wellness and support platform built with Phoenix LiveView for reactive UI and Phoenix Channels for real-time communication. The platform focuses on supporting survivors of Gender-based Violence, providing mentorship, community support, and mental wellness tools in a safe, private environment.
 
-* Background workers (deliver digests, schedule pairing, generate analytics).
+## Core Features
 
-## Priority (MVP-first)
+* **Authentication & Identity** (email sign-up, role-based access, user profiles)
 
-MVP features (build first):
+* **Mood Tracker** (daily emotional check-ins, pattern visualization, wellness analytics)
 
-1. Auth (email sign-up + role selection).
+* **Resource Hub** (curated mental health resources, articles, SOS contacts, helplines)
 
-2. Mood Tracker with simple timeline view.
+* **Live Chat System** (real-time messaging, public and private chat, mentorship connections)
 
-3. Resource Hub (text + audio streaming via signed URLs).
+* **Support Boards** (community forums, experience sharing, peer support)
 
-4. Anonymous peer chat pairing + chat UI (one-to-one).
+* **Mentorship Program** (mentor-mentee matching, application system, guidance sessions)
 
-5. Volunteer Dashboard: see active queue & accept chats.
+* **Wellness Calendar** (schedule management, appointment tracking, wellness activities)
 
-6. Basic moderation/reporting flow and profanity filtering.
-Stretch (add later):
+* **Dashboard** (personal overview, quick stats, recent activity)
 
-  * Calendar integration / notifications.
+* **Admin & Volunteer Management** (manage resources, moderate content, user management)
 
-  * Scheduled workshops & RSVP reminders.
+## Key Focus Areas
 
-  * Sentiment analytics / charts.
+* **Gender-based Violence Support** (dedicated resources, survivor empowerment, ally creation)
+* **Community Building** (peer support, shared experiences, collective healing)
+* **Mentorship Connections** (experienced guidance, personalized support, growth opportunities)
+* **Mental Wellness Tools** (mood tracking, habit building, clarity exercises)
 
-  * Rich media uploads by volunteers.
+## Implemented Features (Current)
+
+1. **Authentication System** (email registration, login, user roles)
+2. **Mood Tracker** with timeline and analytics
+3. **Resource Hub** with SOS contacts and helplines
+4. **Live Chat** (public and private messaging)
+5. **Support Boards** (community forums)
+6. **Mentorship Program** (applications and matching)
+7. **Wellness Calendar** (scheduling and events)
+8. **Dashboard** (personal overview)
+9. **Modern UI** (glassmorphism design, gradients, responsive layout)
+
+## Future Enhancements
+
+* **Advanced Analytics** (sentiment analysis, pattern recognition)
+* **Video Calling** (face-to-face mentorship sessions)
+* **Mobile App** (iOS/Android applications)
+* **AI Support** (smart suggestions, personalized insights)
+* **Workshop Integration** (scheduled events, RSVP system)
+* **Advanced Moderation** (AI-powered content filtering)
 
 
-# Endpoints & LiveViews (minimal list)
+# Endpoints & LiveViews (Current Implementation)
 
-* `/` — landing LiveView
-* `/auth/*` — registration/login via generated auth
-* `/mood` — Mood tracker LiveView + POST endpoint
+* `/` — Landing page with feature overview
+* `/users/register` — User registration LiveView
+* `/users/log-in` — User login LiveView  
+* `/dashboard` — Personal dashboard LiveView
+* `/mood` — Mood tracker LiveView
+* `/calendar` — Wellness calendar LiveView
 * `/resources` — Resource hub LiveView
-* `/resources/new`, `/resources/:id/edit` — Admin LiveViews
-* `/chat` — Request chat / join queue component (LiveView or form)
-* `/volunteer/dashboard` — volunteer LiveView (queue + active)
-* `/chat/:id` — chat LiveView that connects to Channel topic
-* `/events` — Event listing LiveView
-* `/admin` — Admin dashboard (flags, usage metrics)
+* `/resources/new` — Create new resource LiveView
+* `/resources/:id/edit` — Edit resource LiveView
+* `/resources/:id` — View resource details LiveView
+* `/chat` — Public chat LiveView
+* `/chat/:id` — Private chat LiveView
+* `/posts` — Support boards LiveView
+* `/posts/:id` — Individual post LiveView
+* `/mentorship` — Mentorship program LiveView
+* `/mentorship/manage` — Mentorship management LiveView
+* `/users/settings` — User settings LiveView
 
-# Suggested task list (prioritized)
+# Technical Implementation Details
 
-1. Initialize Phoenix project + Ecto + Postgres + phx.gen.auth.
-2. Create `User` schema + roles and volunteer availability.
-3. Build MoodEntry schema + LiveView check-in.
-4. Resources CRUD (admin-only) + listing UI.
-5. Chat tables + basic queue creation.
-6. Phoenix Channel for `chat:<id>` and basic message send/receive.
-7. Volunteer dashboard + Presence.
-8. Pairing worker (Oban job) or GenServer to match queued chats to volunteers.
-9. Moderation/report endpoint + admin view for flags.
-10. S3 integration for resource audio.
-11. Deploy to staging and run simple demo.
+## Architecture
+* **Frontend**: Phoenix LiveView with modern glassmorphism UI design
+* **Backend**: Phoenix with Ecto and PostgreSQL
+* **Real-time**: Phoenix Channels for live messaging
+* **Authentication**: Phoenix built-in auth system with role-based access
+* **File Storage**: Resource files and media handling
 
-# Quick checklist (shareable)
+## Database Schemas
+* **Users** (authentication, roles, profiles)
+* **MoodEntries** (daily check-ins, emotional tracking)
+* **Resources** (mental health resources, SOS contacts)
+* **Chats** (public and private messaging)
+* **Messages** (chat messages with user associations)
+* **Posts** (community support board posts)
+* **Mentorships** (mentor-mentee relationships and applications)
 
-* [ ] Phoenix app scaffolded
-* [ ] PostgreSQL + Ecto configured
-* [ ] Authentication implemented
-* [ ] Mood tracker UI and DB
-* [ ] Resource hub CRUD + audio streaming
-* [ ] Anonymous chat models + channels
-* [ ] Volunteer dashboard + Presence
-* [ ] Pairing worker (Oban)
-* [ ] Moderation/reporting UI
-* [ ] Deployable release + CI
-* [ ] Basic tests for critical flows
+## Current Status Checklist
 
-# Final pragmatic advice (philosophy + craft)
+* [x] Phoenix app scaffolded with LiveView
+* [x] PostgreSQL + Ecto configured
+* [x] Authentication system implemented
+* [x] Mood tracker UI and database
+* [x] Resource hub with SOS contacts
+* [x] Live chat system (public & private)
+* [x] Support boards for community
+* [x] Mentorship program with applications
+* [x] Wellness calendar system
+* [x] Modern responsive UI design
+* [x] Dashboard with personal overview
+* [x] Real-time messaging with Phoenix Channels
+* [x] Role-based access control
+* [x] GBV-focused resources and support
 
-* Keep the MVP *tiny* but end-to-end: one complete story (auth → mood → chat) is far better than many half-finished features. Examiners like working demos.
-* Treat anonymity as a first-class requirement — if you compromise that, the whole project loses credibility.
-* Write tests for the matching logic — that’s the part most likely to have race conditions.
-* Use LiveView for most UI to minimize JS surface area; add JS only if absolutely necessary for UX.
+## Development Philosophy
+
+* **User-Centered Design**: Focus on survivor empowerment and safety
+* **Privacy First**: All interactions designed with user privacy as priority
+* **Community Building**: Foster supportive peer connections
+* **Accessible Interface**: Modern, intuitive UI that works across devices
+* **Real-time Support**: Live chat and mentorship connections
+* **Comprehensive Care**: From immediate help to long-term wellness tools
+
+## Key Differentiators
+
+* **GBV Specialization**: Dedicated focus on gender-based violence support
+* **Mentorship Network**: Experienced mentors providing personalized guidance
+* **Community Support**: Peer-to-peer support through forums and chat
+* **Integrated Wellness**: Combines crisis support with ongoing mental wellness tools
+* **Safe Environment**: Moderated spaces with user safety as top priority
